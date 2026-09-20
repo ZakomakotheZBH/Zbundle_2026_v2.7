@@ -1,759 +1,444 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ZOS StreamOS · TV Edition</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    /* ============================================================
-       TV·OS  —  CINEMATIC UI
-       ============================================================ */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ZOS StreamOS 4.0 · TV Edition</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --primary:#00f260;--primary-glow:rgba(0,242,96,.35);
+  --secondary:#0575e6;
+  --bg-deep:#0a0b10;--bg-surface:#11131c;
+  --bg-card:rgba(20,22,36,.75);--bg-elevated:rgba(30,33,52,.85);
+  --text-primary:#f0f4ff;--text-secondary:#8e92a8;--text-muted:#5e6278;
+  --radius-card:18px;--radius-pill:40px;
+  --shadow-card:0 12px 40px rgba(0,0,0,.6);
+  --shadow-glow:0 8px 32px rgba(0,242,96,.15);
+  --transition:.25s cubic-bezier(.25,.46,.45,.94);
+}
+[data-theme="blue"]{--primary:#3b82f6;--primary-glow:rgba(59,130,246,.35);--secondary:#8b5cf6}
+[data-theme="purple"]{--primary:#a855f7;--primary-glow:rgba(168,85,247,.35);--secondary:#ec4899}
+[data-theme="sunset"]{--primary:#f97316;--primary-glow:rgba(249,115,22,.35);--secondary:#ef4444}
+[data-theme="mono"]{--primary:#e5e7eb;--primary-glow:rgba(229,231,235,.25);--secondary:#9ca3af}
+body.reduce-motion *{animation:none!important;transition:none!important}
 
-    :root {
-      --primary: #00f260;
-      --primary-glow: rgba(0, 242, 96, 0.35);
-      --secondary: #0575e6;
-      --bg-deep: #0a0b10;
-      --bg-surface: #11131c;
-      --bg-card: rgba(20, 22, 36, 0.75);
-      --bg-elevated: rgba(30, 33, 52, 0.85);
-      --text-primary: #f0f4ff;
-      --text-secondary: #8e92a8;
-      --text-muted: #5e6278;
-      --radius-card: 18px;
-      --radius-pill: 40px;
-      --shadow-card: 0 12px 40px rgba(0, 0, 0, 0.6);
-      --shadow-glow: 0 8px 32px rgba(0, 242, 96, 0.15);
-      --transition: 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    }
+body{
+  background:var(--bg-deep);color:var(--text-primary);
+  font-family:'Inter',-apple-system,system-ui,sans-serif;
+  min-height:100vh;padding:0 0 100px 0;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg-deep)}
+::-webkit-scrollbar-thumb{background:var(--primary);border-radius:10px}
 
-    body {
-      background: var(--bg-deep);
-      color: var(--text-primary);
-      font-family: 'Inter', -apple-system, system-ui, sans-serif;
-      min-height: 100vh;
-      padding: 0 0 100px 0;
-      overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-    }
+/* TOP BAR */
+.top-bar{
+  position:fixed;top:18px;right:24px;z-index:900;
+  display:flex;align-items:center;gap:12px;
+  background:rgba(10,11,16,.8);backdrop-filter:blur(18px);
+  padding:6px 16px 6px 12px;border-radius:var(--radius-pill);
+  border:1px solid var(--primary-glow);box-shadow:var(--shadow-card);
+  cursor:pointer;transition:var(--transition);
+}
+.top-bar:hover{border-color:var(--primary);transform:scale(1.02);box-shadow:var(--shadow-glow)}
+.top-bar .avatar{
+  width:34px;height:34px;border-radius:50%;
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;font-weight:600;color:#000;flex-shrink:0;
+}
+.top-bar .name{font-size:.85rem;font-weight:600}
+.ticket-badge{
+  background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.25);
+  border-radius:20px;padding:2px 12px;font-size:.7rem;font-weight:600;
+  color:#ffd966;display:flex;align-items:center;gap:5px;
+}
+.top-controls{position:fixed;top:18px;left:24px;z-index:900;display:flex;gap:8px}
+.icon-btn{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);
+  color:var(--text-primary);width:36px;height:36px;border-radius:50%;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:var(--transition);
+}
+.icon-btn:hover{background:rgba(255,255,255,.1);border-color:var(--primary)}
+.icon-btn.badge::after{
+  content:attr(data-count);position:absolute;top:-4px;right:-4px;
+  background:var(--primary);color:#000;font-size:.6rem;font-weight:700;
+  border-radius:10px;padding:1px 6px;min-width:16px;text-align:center;
+}
+.icon-btn{position:relative}
 
-    /* ---- scrollbar ---- */
-    ::-webkit-scrollbar { width: 5px; height: 5px; }
-    ::-webkit-scrollbar-track { background: var(--bg-deep); }
-    ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+/* TASKBAR */
+.taskbar{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  width:94%;max-width:1100px;
+  background:rgba(12,14,22,.92);backdrop-filter:blur(24px) saturate(1.6);
+  border-radius:60px;border:1px solid rgba(255,255,255,.06);
+  border-bottom:1px solid var(--primary-glow);
+  box-shadow:0 16px 48px rgba(0,0,0,.7);
+  padding:6px 10px;display:flex;justify-content:space-around;
+  align-items:center;z-index:1000;gap:2px;
+}
+.taskbar-item{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  background:transparent;border:none;color:var(--text-muted);
+  font-size:.55rem;font-weight:500;cursor:pointer;
+  padding:10px 16px;min-width:64px;border-radius:40px;
+  transition:var(--transition);position:relative;font-family:inherit;
+}
+.taskbar-item i{font-size:1.15rem;transition:var(--transition);margin-bottom:2px}
+.taskbar-item:hover{color:var(--text-primary);background:rgba(255,255,255,.04)}
+.taskbar-item.active{color:var(--primary);background:rgba(0,242,96,.08)}
+.taskbar-item.active i{text-shadow:0 0 20px var(--primary-glow)}
+.taskbar-item.active::after{
+  content:'';position:absolute;bottom:4px;left:30%;right:30%;
+  height:3px;background:var(--primary);border-radius:4px;
+  box-shadow:0 0 12px var(--primary-glow);
+}
+.taskbar-item:active{transform:scale(.94)}
 
-    /* ---- glass base ---- */
-    .glass {
-      background: var(--bg-card);
-      backdrop-filter: blur(16px) saturate(1.4);
-      -webkit-backdrop-filter: blur(16px) saturate(1.4);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-    }
+/* PANELS */
+.panel{display:none;animation:fadeSlide .3s ease}
+.panel.active-panel{display:block}
+@keyframes fadeSlide{0%{opacity:0;transform:translateY(12px)}100%{opacity:1;transform:translateY(0)}}
+.content{max-width:1440px;margin:0 auto;padding:80px 24px 20px}
 
-    /* ============================================================
-       TOP BAR  —  profile + tickets
-       ============================================================ */
-    .top-bar {
-      position: fixed;
-      top: 18px;
-      right: 24px;
-      z-index: 900;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: rgba(10, 11, 16, 0.8);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      padding: 6px 16px 6px 12px;
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(0, 242, 96, 0.2);
-      box-shadow: var(--shadow-card);
-      cursor: pointer;
-      transition: var(--transition);
-    }
-    .top-bar:hover {
-      border-color: var(--primary);
-      transform: scale(1.02);
-      box-shadow: var(--shadow-glow);
-    }
-    .top-bar .avatar {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #000;
-      flex-shrink: 0;
-    }
-    .top-bar .name {
-      font-size: 0.85rem;
-      font-weight: 600;
-      letter-spacing: 0.01em;
-    }
-    .top-bar .ticket-badge {
-      background: rgba(255, 215, 0, 0.12);
-      border: 1px solid rgba(255, 215, 0, 0.25);
-      border-radius: 20px;
-      padding: 2px 12px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: #ffd966;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
+/* HERO */
+.hero{
+  position:relative;border-radius:var(--radius-card);overflow:hidden;
+  margin-bottom:32px;background:linear-gradient(145deg,#0f1a1a,#0a0e14);
+  border:1px solid rgba(255,255,255,.04);box-shadow:var(--shadow-card);
+  min-height:280px;display:flex;align-items:flex-end;padding:40px;
+  background-image:radial-gradient(circle at 20% 30%,var(--primary-glow) 0%,transparent 60%);
+}
+.hero::after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.7) 0%,transparent 80%);pointer-events:none}
+.hero-content{position:relative;z-index:2;max-width:600px}
+.badge{display:inline-block;background:var(--primary);color:#000;font-weight:700;font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;padding:4px 14px;border-radius:20px;margin-bottom:12px}
+.hero-content h1{font-size:2.6rem;font-weight:800;letter-spacing:-.02em;line-height:1.1;margin-bottom:8px}
+.hero-content p{font-size:1rem;color:var(--text-secondary);max-width:400px;line-height:1.5}
+.hero-actions{margin-top:18px;display:flex;gap:12px;flex-wrap:wrap}
 
-    /* ============================================================
-       TASKBAR  —  like Apple TV / Android TV
-       ============================================================ */
-    .taskbar {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 94%;
-      max-width: 1100px;
-      background: rgba(12, 14, 22, 0.92);
-      backdrop-filter: blur(24px) saturate(1.6);
-      -webkit-backdrop-filter: blur(24px) saturate(1.6);
-      border-radius: 60px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-bottom: 1px solid rgba(0, 242, 96, 0.15);
-      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.7);
-      padding: 6px 10px;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 1000;
-      gap: 2px;
-    }
-    .taskbar-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-size: 0.55rem;
-      font-weight: 500;
-      letter-spacing: 0.02em;
-      cursor: pointer;
-      padding: 10px 16px;
-      min-width: 64px;
-      border-radius: 40px;
-      transition: var(--transition);
-      position: relative;
-    }
-    .taskbar-item i {
-      font-size: 1.15rem;
-      transition: var(--transition);
-      margin-bottom: 2px;
-    }
-    .taskbar-item span {
-      opacity: 0.8;
-      transition: var(--transition);
-    }
-    .taskbar-item:hover {
-      color: var(--text-primary);
-      background: rgba(255, 255, 255, 0.04);
-    }
-    .taskbar-item.active {
-      color: var(--primary);
-      background: rgba(0, 242, 96, 0.08);
-    }
-    .taskbar-item.active i {
-      text-shadow: 0 0 20px var(--primary-glow);
-    }
-    .taskbar-item.active::after {
-      content: '';
-      position: absolute;
-      bottom: 4px;
-      left: 30%;
-      right: 30%;
-      height: 3px;
-      background: var(--primary);
-      border-radius: 4px;
-      box-shadow: 0 0 12px var(--primary-glow);
-    }
-    .taskbar-item:active { transform: scale(0.94); }
+/* BUTTONS */
+.btn-primary,.btn-secondary,.btn-danger{
+  border:none;padding:10px 24px;border-radius:40px;font-weight:700;
+  font-size:.85rem;cursor:pointer;transition:var(--transition);
+  display:inline-flex;align-items:center;gap:8px;font-family:inherit;
+}
+.btn-primary{background:var(--primary);color:#000}
+.btn-primary:hover{transform:scale(1.04);box-shadow:0 8px 30px var(--primary-glow)}
+.btn-secondary{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);color:var(--text-primary);font-weight:600}
+.btn-secondary:hover{background:rgba(255,255,255,.12)}
+.btn-danger{background:rgba(255,68,68,.15);border:1px solid rgba(255,68,68,.25);color:#ff6b6b}
+.btn-danger:hover{background:rgba(255,68,68,.25)}
+.btn-sm{padding:6px 14px!important;font-size:.75rem!important}
 
-    /* ============================================================
-       PANELS
-       ============================================================ */
-    .panel {
-      display: none;
-      animation: fadeSlide 0.3s ease;
-    }
-    .panel.active-panel { display: block; }
+/* SECTION HEADERS */
+.section-header{display:flex;justify-content:space-between;align-items:center;margin:28px 0 16px}
+.section-header h2{font-size:1.3rem;font-weight:700;letter-spacing:-.01em}
+.section-header .see-all{color:var(--text-muted);font-size:.8rem;font-weight:500;cursor:pointer;transition:var(--transition)}
+.section-header .see-all:hover{color:var(--text-primary)}
 
-    @keyframes fadeSlide {
-      0% { opacity: 0; transform: translateY(12px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
+/* GRID */
+.show-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px}
+.show-card{
+  background:var(--bg-card);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.04);border-radius:var(--radius-card);
+  padding:16px;cursor:pointer;transition:var(--transition);
+  box-shadow:0 4px 16px rgba(0,0,0,.2);position:relative;
+}
+.show-card:hover{transform:translateY(-6px);border-color:var(--primary);box-shadow:var(--shadow-glow),0 12px 32px rgba(0,0,0,.4)}
+.show-card:active{transform:scale(.96)}
+.show-card .thumb{
+  width:100%;aspect-ratio:16/9;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:2.6rem;margin-bottom:12px;transition:var(--transition);
+  background:radial-gradient(circle at 30% 30%,#1a1f2e,#0d0f18);
+}
+.show-card:hover .thumb{transform:scale(1.02)}
+.show-card h4{font-weight:600;font-size:.9rem;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.category-tag{font-size:.65rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em}
+.card-actions{position:absolute;top:8px;right:8px;display:flex;gap:4px;opacity:0;transition:var(--transition);z-index:3}
+.show-card:hover .card-actions{opacity:1}
+.card-actions button{
+  width:28px;height:28px;border-radius:50%;border:none;
+  background:rgba(0,0,0,.7);color:#fff;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:.7rem;
+}
+.card-actions button:hover{background:var(--primary);color:#000}
+.card-actions button.fav{background:#ffd966;color:#000}
+.progress-bar{height:3px;background:rgba(255,255,255,.08);border-radius:2px;margin-top:8px;overflow:hidden}
+.progress-bar>div{height:100%;background:var(--primary);border-radius:2px}
 
-    .content {
-      max-width: 1440px;
-      margin: 0 auto;
-      padding: 80px 24px 20px 24px;
-    }
+/* VIDEO STAGE */
+.video-stage{
+  background:#000;border-radius:var(--radius-card);overflow:hidden;
+  aspect-ratio:16/9;position:relative;min-height:360px;
+  box-shadow:var(--shadow-card);border:1px solid rgba(255,255,255,.04);
+}
+.video-stage iframe,.video-stage video{
+  width:100%;height:100%;position:absolute;top:0;left:0;
+  border:none;object-fit:contain;background:#000;
+}
+.video-stage .placeholder{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:100%;background:radial-gradient(circle at 30% 30%,#12161f,#07090e);
+  color:var(--text-muted);
+}
+.video-stage .placeholder i{font-size:4rem;color:var(--primary);margin-bottom:16px;opacity:.5}
 
-    /* ============================================================
-       HERO  —  cinematic banner
-       ============================================================ */
-    .hero {
-      position: relative;
-      border-radius: var(--radius-card);
-      overflow: hidden;
-      margin-bottom: 32px;
-      background: linear-gradient(145deg, #0f1a1a, #0a0e14);
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      box-shadow: var(--shadow-card);
-      min-height: 280px;
-      display: flex;
-      align-items: flex-end;
-      padding: 40px 40px 32px 40px;
-      background-image: radial-gradient(circle at 20% 30%, rgba(0, 242, 96, 0.06) 0%, transparent 60%);
-    }
-    .hero::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, transparent 80%);
-      pointer-events: none;
-    }
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      max-width: 600px;
-    }
-    .hero-content .badge {
-      display: inline-block;
-      background: var(--primary);
-      color: #000;
-      font-weight: 700;
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      padding: 4px 14px;
-      border-radius: 20px;
-      margin-bottom: 12px;
-    }
-    .hero-content h1 {
-      font-size: 2.6rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-      margin-bottom: 8px;
-    }
-    .hero-content p {
-      font-size: 1rem;
-      color: var(--text-secondary);
-      max-width: 400px;
-      line-height: 1.5;
-    }
-    .hero-content .hero-actions {
-      margin-top: 18px;
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .btn-primary {
-      background: var(--primary);
-      color: #000;
-      border: none;
-      padding: 10px 28px;
-      border-radius: 40px;
-      font-weight: 700;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: var(--transition);
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .btn-primary:hover {
-      transform: scale(1.04);
-      box-shadow: 0 8px 30px var(--primary-glow);
-    }
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      color: var(--text-primary);
-      padding: 10px 28px;
-      border-radius: 40px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: var(--transition);
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.12);
-      border-color: rgba(255, 255, 255, 0.15);
-    }
+/* CATEGORY PILLS */
+.category-pills{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 20px}
+.category-pills button{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);
+  color:var(--text-secondary);padding:6px 18px;border-radius:30px;
+  font-size:.75rem;font-weight:600;cursor:pointer;transition:var(--transition);
+  font-family:inherit;
+}
+.category-pills button:hover{background:rgba(255,255,255,.08);color:var(--text-primary)}
+.category-pills button.active{background:var(--primary);color:#000;border-color:var(--primary);box-shadow:0 4px 20px var(--primary-glow)}
 
-    /* ============================================================
-       SECTION HEADERS
-       ============================================================ */
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 28px 0 16px 0;
-    }
-    .section-header h2 {
-      font-size: 1.3rem;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-    }
-    .section-header .see-all {
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-    .section-header .see-all:hover {
-      color: var(--text-primary);
-    }
+/* CONTROLS */
+.stream-controls{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0 20px;align-items:center}
+.stream-controls input,.ip-input{
+  flex:1;min-width:200px;background:var(--bg-surface);
+  border:1px solid rgba(255,255,255,.06);border-radius:40px;
+  padding:12px 20px;color:var(--text-primary);font-size:.9rem;
+  outline:none;transition:var(--transition);font-family:inherit;
+}
+.stream-controls input:focus,.ip-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-glow)}
 
-    /* ============================================================
-       GRID  —  show tiles
-       ============================================================ */
-    .show-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 18px;
-    }
-    .show-card {
-      background: var(--bg-card);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      border-radius: var(--radius-card);
-      padding: 16px 16px 18px;
-      cursor: pointer;
-      transition: var(--transition);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-    }
-    .show-card:hover {
-      transform: translateY(-6px);
-      border-color: var(--primary);
-      box-shadow: var(--shadow-glow), 0 12px 32px rgba(0,0,0,0.4);
-    }
-    .show-card:active { transform: scale(0.96); }
-    .show-card .thumb {
-      width: 100%;
-      aspect-ratio: 16/9;
-      background: var(--bg-surface);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2.6rem;
-      margin-bottom: 12px;
-      transition: var(--transition);
-      background: radial-gradient(circle at 30% 30%, #1a1f2e, #0d0f18);
-    }
-    .show-card:hover .thumb {
-      transform: scale(1.02);
-    }
-    .show-card h4 {
-      font-weight: 600;
-      font-size: 0.9rem;
-      margin-bottom: 4px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .show-card .category-tag {
-      font-size: 0.65rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
+/* GLASS PANEL */
+.glass-panel{
+  background:var(--bg-card);backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.04);border-radius:var(--radius-card);
+  padding:24px;margin-bottom:24px;box-shadow:var(--shadow-card);
+}
 
-    /* ============================================================
-       VIDEO STAGE  —  cinematic player
-       ============================================================ */
-    .video-stage {
-      background: #000;
-      border-radius: var(--radius-card);
-      overflow: hidden;
-      aspect-ratio: 16/9;
-      position: relative;
-      min-height: 360px;
-      box-shadow: var(--shadow-card);
-      border: 1px solid rgba(255, 255, 255, 0.04);
-    }
-    .video-stage iframe,
-    .video-stage video {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      border: none;
-      object-fit: contain;
-      background: #000;
-    }
-    .video-stage .placeholder {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-      background: radial-gradient(circle at 30% 30%, #12161f, #07090e);
-      color: var(--text-muted);
-    }
-    .video-stage .placeholder i {
-      font-size: 4rem;
-      color: var(--primary);
-      margin-bottom: 16px;
-      opacity: 0.5;
-    }
-    .video-stage .placeholder p {
-      font-size: 0.95rem;
-      font-weight: 500;
-    }
+/* MODAL */
+.modal-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);
+  backdrop-filter:blur(14px);z-index:9999;justify-content:center;
+  align-items:center;padding:20px;animation:fadeSlide .25s ease;
+}
+.modal-overlay.active{display:flex}
+.modal-box{
+  background:var(--bg-surface);border:1px solid rgba(255,255,255,.06);
+  border-radius:var(--radius-card);max-width:640px;width:100%;
+  max-height:85vh;overflow-y:auto;padding:32px;box-shadow:var(--shadow-card);
+}
+.modal-box h2{font-size:1.4rem;font-weight:700;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center}
+.modal-close{background:none;border:none;color:var(--text-muted);font-size:1.2rem;cursor:pointer;padding:4px 8px;border-radius:8px;transition:var(--transition)}
+.modal-close:hover{background:rgba(255,255,255,.06);color:var(--text-primary)}
 
-    /* ============================================================
-       CATEGORY PILLS
-       ============================================================ */
-    .category-pills {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin: 16px 0 20px 0;
-    }
-    .category-pills button {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      color: var(--text-secondary);
-      padding: 6px 18px;
-      border-radius: 30px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-    .category-pills button:hover {
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text-primary);
-    }
-    .category-pills button.active {
-      background: var(--primary);
-      color: #000;
-      border-color: var(--primary);
-      box-shadow: 0 4px 20px var(--primary-glow);
-    }
+.user-item{
+  display:flex;align-items:center;gap:14px;padding:12px 14px;
+  background:rgba(255,255,255,.02);border-radius:14px;margin-bottom:8px;
+  cursor:pointer;transition:var(--transition);border:1px solid transparent;
+}
+.user-item:hover{background:rgba(255,255,255,.05);border-color:var(--primary-glow)}
+.user-item .u-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;background:rgba(0,242,96,.1)}
+.user-item .u-info{flex:1}
+.user-item .u-name{font-weight:600;font-size:.9rem}
+.user-item .u-sub{font-size:.7rem;color:var(--text-muted)}
 
-    /* ============================================================
-       STREAM CONTROLS
-       ============================================================ */
-    .stream-controls {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin: 16px 0 20px 0;
-      align-items: center;
-    }
-    .stream-controls input {
-      flex: 1;
-      min-width: 200px;
-      background: var(--bg-surface);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 40px;
-      padding: 12px 20px;
-      color: var(--text-primary);
-      font-size: 0.9rem;
-      outline: none;
-      transition: var(--transition);
-    }
-    .stream-controls input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(0, 242, 96, 0.08);
-    }
+.input-group{margin-bottom:12px}
+.input-group label{display:block;font-size:.75rem;font-weight:600;color:var(--text-secondary);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
+.input-group input,.input-group select{
+  width:100%;background:var(--bg-deep);border:1px solid rgba(255,255,255,.06);
+  border-radius:30px;padding:12px 18px;color:var(--text-primary);
+  font-size:.9rem;outline:none;transition:var(--transition);font-family:inherit;
+}
+.input-group input:focus,.input-group select:focus{border-color:var(--primary)}
 
-    /* ============================================================
-       MODAL  —  account / settings
-       ============================================================ */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      z-index: 9999;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      animation: fadeSlide 0.25s ease;
-    }
-    .modal-overlay.active { display: flex; }
-    .modal-box {
-      background: var(--bg-surface);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: var(--radius-card);
-      max-width: 600px;
-      width: 100%;
-      max-height: 85vh;
-      overflow-y: auto;
-      padding: 32px;
-      box-shadow: var(--shadow-card);
-    }
-    .modal-box h2 {
-      font-size: 1.4rem;
-      font-weight: 700;
-      margin-bottom: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .modal-close {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 1.2rem;
-      cursor: pointer;
-      padding: 4px 8px;
-      border-radius: 8px;
-      transition: var(--transition);
-    }
-    .modal-close:hover {
-      background: rgba(255,255,255,0.06);
-      color: var(--text-primary);
-    }
+.store-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin:12px 0}
+.store-item{
+  background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);
+  border-radius:14px;padding:14px 10px;text-align:center;transition:var(--transition);
+}
+.store-item:hover{border-color:var(--primary-glow);background:rgba(0,242,96,.03)}
+.store-item .price{color:#ffd966;font-weight:700;margin:6px 0}
+.store-item button{
+  background:var(--primary);color:#000;border:none;padding:5px 16px;
+  border-radius:30px;font-weight:700;font-size:.75rem;cursor:pointer;transition:var(--transition);
+}
+.store-item button:hover{transform:scale(1.05);box-shadow:0 4px 20px var(--primary-glow)}
+.store-item button:disabled{opacity:.3;cursor:default;transform:none!important;box-shadow:none!important}
 
-    .user-item {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 12px 14px;
-      background: rgba(255,255,255,0.02);
-      border-radius: 14px;
-      margin-bottom: 8px;
-      cursor: pointer;
-      transition: var(--transition);
-      border: 1px solid transparent;
-    }
-    .user-item:hover {
-      background: rgba(255,255,255,0.05);
-      border-color: rgba(0,242,96,0.1);
-    }
-    .user-item .u-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      flex-shrink: 0;
-      background: rgba(0,242,96,0.1);
-    }
-    .user-item .u-info { flex: 1; }
-    .user-item .u-name { font-weight: 600; font-size: 0.9rem; }
-    .user-item .u-sub { font-size: 0.7rem; color: var(--text-muted); }
+/* COMING SOON */
+.coming-soon{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:60px 20px;text-align:center;
+  border:2px dashed var(--primary-glow);border-radius:var(--radius-card);
+  background:rgba(0,242,96,.02);
+}
+.coming-soon i{font-size:3.6rem;color:var(--primary);margin-bottom:16px;opacity:.6}
+.coming-soon h3{font-size:1.6rem;font-weight:700;margin-bottom:6px}
+.coming-soon p{color:var(--text-secondary)}
 
-    .input-group {
-      margin-bottom: 12px;
-    }
-    .input-group label {
-      display: block;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--text-secondary);
-      margin-bottom: 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-    .input-group input {
-      width: 100%;
-      background: var(--bg-deep);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 30px;
-      padding: 12px 18px;
-      color: var(--text-primary);
-      font-size: 0.9rem;
-      outline: none;
-      transition: var(--transition);
-    }
-    .input-group input:focus {
-      border-color: var(--primary);
-    }
+/* TOAST */
+.toast-container{
+  position:fixed;bottom:100px;left:50%;transform:translateX(-50%);
+  z-index:9999;display:flex;flex-direction:column;gap:8px;
+  align-items:center;pointer-events:none;max-width:90vw;
+}
+.toast{
+  background:rgba(10,11,16,.94);backdrop-filter:blur(12px);
+  padding:12px 28px;border-radius:40px;
+  border:1px solid var(--primary-glow);color:var(--text-primary);
+  font-weight:500;font-size:.9rem;animation:toastUp .3s ease;
+  pointer-events:auto;box-shadow:0 8px 32px rgba(0,0,0,.5);
+}
+@keyframes toastUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
-    .store-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 10px;
-      margin: 12px 0;
-    }
-    .store-item {
-      background: rgba(255,255,255,0.02);
-      border: 1px solid rgba(255,255,255,0.04);
-      border-radius: 14px;
-      padding: 14px 10px;
-      text-align: center;
-      transition: var(--transition);
-    }
-    .store-item:hover {
-      border-color: rgba(0,242,96,0.15);
-      background: rgba(0,242,96,0.03);
-    }
-    .store-item .price {
-      color: #ffd966;
-      font-weight: 700;
-      margin: 6px 0;
-    }
-    .store-item button {
-      background: var(--primary);
-      color: #000;
-      border: none;
-      padding: 5px 16px;
-      border-radius: 30px;
-      font-weight: 700;
-      font-size: 0.75rem;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-    .store-item button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 4px 20px var(--primary-glow);
-    }
-    .store-item button:disabled {
-      opacity: 0.3;
-      cursor: default;
-      transform: none !important;
-      box-shadow: none !important;
-    }
+/* MINI PLAYER BAR */
+.mini-player{
+  position:fixed;bottom:100px;left:50%;transform:translateX(-50%);
+  background:rgba(12,14,22,.95);backdrop-filter:blur(20px);
+  border:1px solid var(--primary-glow);border-radius:40px;
+  padding:8px 12px 8px 20px;display:none;align-items:center;gap:14px;
+  z-index:800;box-shadow:var(--shadow-card);max-width:90vw;
+}
+.mini-player.active{display:flex}
+.mini-player .mp-info{font-size:.8rem;font-weight:600;max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini-player .mp-controls{display:flex;gap:6px}
 
-    /* ============================================================
-       MISC
-       ============================================================ */
-    .glass-panel {
-      background: var(--bg-card);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.04);
-      border-radius: var(--radius-card);
-      padding: 24px;
-      margin-bottom: 24px;
-      box-shadow: var(--shadow-card);
-    }
+/* COMMAND PALETTE */
+.cmd-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);
+  backdrop-filter:blur(14px);z-index:10000;justify-content:center;
+  align-items:flex-start;padding-top:15vh;
+}
+.cmd-overlay.active{display:flex}
+.cmd-box{
+  background:var(--bg-surface);border:1px solid var(--primary-glow);
+  border-radius:20px;max-width:560px;width:90%;
+  box-shadow:0 20px 60px rgba(0,0,0,.8);overflow:hidden;
+}
+.cmd-box input{
+  width:100%;background:transparent;border:none;outline:none;
+  padding:20px 24px;color:var(--text-primary);font-size:1.1rem;
+  font-family:inherit;border-bottom:1px solid rgba(255,255,255,.06);
+}
+.cmd-results{max-height:50vh;overflow-y:auto;padding:8px}
+.cmd-item{
+  padding:12px 18px;border-radius:12px;cursor:pointer;
+  display:flex;align-items:center;gap:12px;font-size:.9rem;
+  transition:var(--transition);
+}
+.cmd-item:hover,.cmd-item.selected{background:rgba(0,242,96,.08)}
+.cmd-item i{width:20px;color:var(--primary)}
 
-    .coming-soon {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 60px 20px;
-      text-align: center;
-      border: 2px dashed rgba(0,242,96,0.15);
-      border-radius: var(--radius-card);
-      background: rgba(0,242,96,0.02);
-    }
-    .coming-soon i {
-      font-size: 3.6rem;
-      color: var(--primary);
-      margin-bottom: 16px;
-      opacity: 0.6;
-    }
-    .coming-soon h3 {
-      font-size: 1.6rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-    .coming-soon p {
-      color: var(--text-secondary);
-    }
+/* NOTIFICATIONS PANEL */
+.notif-panel{
+  position:fixed;top:70px;right:24px;width:340px;max-height:70vh;
+  background:var(--bg-surface);border:1px solid var(--primary-glow);
+  border-radius:18px;box-shadow:var(--shadow-card);
+  z-index:950;display:none;overflow:hidden;flex-direction:column;
+}
+.notif-panel.active{display:flex}
+.notif-header{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.06);font-weight:700;display:flex;justify-content:space-between;align-items:center}
+.notif-list{overflow-y:auto;padding:8px;flex:1}
+.notif-item{padding:12px 16px;border-radius:12px;margin-bottom:4px;background:rgba(255,255,255,.02);font-size:.85rem}
+.notif-item .time{font-size:.7rem;color:var(--text-muted);margin-top:4px}
+.notif-empty{padding:40px;text-align:center;color:var(--text-muted);font-size:.85rem}
 
-    .toast-container {
-      position: fixed;
-      bottom: 100px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      align-items: center;
-      pointer-events: none;
-    }
-    .toast {
-      background: rgba(10, 11, 16, 0.94);
-      backdrop-filter: blur(12px);
-      padding: 12px 28px;
-      border-radius: 40px;
-      border: 1px solid rgba(0,242,96,0.2);
-      color: var(--text-primary);
-      font-weight: 500;
-      font-size: 0.9rem;
-      animation: toastUp 0.3s ease;
-      pointer-events: auto;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-    }
-    @keyframes toastUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+/* QR */
+.qr-box{background:#fff;padding:12px;border-radius:12px;display:inline-block;margin-top:10px}
+.qr-box canvas{display:block}
 
-    /* ============================================================
-       RESPONSIVE
-       ============================================================ */
-    @media (max-width: 768px) {
-      .taskbar-item span { display: none; }
-      .taskbar-item { padding: 8px 12px; min-width: 48px; }
-      .taskbar-item i { font-size: 1.2rem; }
-      .content { padding: 70px 16px 16px 16px; }
-      .hero { padding: 28px 24px 24px 24px; min-height: 200px; }
-      .hero-content h1 { font-size: 1.8rem; }
-      .hero-content p { font-size: 0.85rem; }
-      .show-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
-      .top-bar .name { display: none; }
-      .top-bar { padding: 4px 12px 4px 8px; }
-      .modal-box { padding: 20px; }
-    }
-    @media (max-width: 480px) {
-      .show-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
-      .taskbar { width: 98%; padding: 4px 4px; gap: 0; }
-      .taskbar-item { padding: 6px 6px; min-width: 36px; }
-      .hero-content h1 { font-size: 1.4rem; }
-      .hero { padding: 20px 16px 16px 16px; min-height: 160px; }
-      .video-stage { min-height: 200px; }
-    }
-  </style>
+/* ACHIEVEMENTS */
+.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+.ach-item{
+  background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);
+  border-radius:14px;padding:14px 10px;text-align:center;transition:var(--transition);
+  opacity:.4;
+}
+.ach-item.unlocked{opacity:1;border-color:var(--primary-glow);background:rgba(0,242,96,.05)}
+.ach-item .ach-icon{font-size:1.8rem;margin-bottom:6px}
+.ach-item .ach-name{font-size:.75rem;font-weight:600}
+.ach-item .ach-desc{font-size:.65rem;color:var(--text-muted);margin-top:2px}
+
+/* HIDDEN */
+.hidden{display:none!important}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .taskbar-item span{display:none}
+  .taskbar-item{padding:8px 12px;min-width:48px}
+  .taskbar-item i{font-size:1.2rem}
+  .content{padding:70px 16px 16px}
+  .hero{padding:28px 24px 24px;min-height:200px}
+  .hero-content h1{font-size:1.8rem}
+  .hero-content p{font-size:.85rem}
+  .show-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+  .top-bar .name{display:none}
+  .top-bar{padding:4px 12px 4px 8px}
+  .modal-box{padding:20px}
+  .top-controls{left:12px}
+  .notif-panel{width:calc(100vw - 24px);right:12px}
+}
+@media(max-width:480px){
+  .show-grid{grid-template-columns:1fr 1fr;gap:12px}
+  .taskbar{width:98%;padding:4px 4px;gap:0}
+  .taskbar-item{padding:6px 6px;min-width:36px}
+  .hero-content h1{font-size:1.4rem}
+  .hero{padding:20px 16px 16px;min-height:160px}
+  .video-stage{min-height:200px}
+}
+</style>
 </head>
 <body>
 
-<!-- ===== TOAST ===== -->
 <div class="toast-container" id="toastContainer"></div>
 
-<!-- ===== TOP BAR ===== -->
+<!-- MINI PLAYER -->
+<div class="mini-player" id="miniPlayer">
+  <i class="fa-solid fa-circle-play" style="color:var(--primary)"></i>
+  <span class="mp-info" id="miniPlayerInfo">Now Playing</span>
+  <div class="mp-controls">
+    <button class="icon-btn" id="miniPlayPause" title="Play/Pause"><i class="fa-solid fa-pause"></i></button>
+    <button class="icon-btn" id="miniClose" title="Close"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+</div>
+
+<!-- TOP CONTROLS -->
+<div class="top-controls">
+  <button class="icon-btn" id="themeBtn" title="Theme"><i class="fa-solid fa-palette"></i></button>
+  <button class="icon-btn" id="searchBtn" title="Search (/)"><i class="fa-solid fa-magnifying-glass"></i></button>
+  <button class="icon-btn" id="notifBtn" title="Notifications" data-count="0"><i class="fa-solid fa-bell"></i></button>
+</div>
+
+<!-- TOP BAR -->
 <div class="top-bar" id="accountBar">
   <div class="avatar" id="currentAvatar">👤</div>
   <span class="name" id="currentUserName">Guest</span>
   <span class="ticket-badge"><i class="fa-solid fa-ticket"></i> <span id="zpointsDisplay">0</span></span>
 </div>
 
-<!-- ===== TASKBAR ===== -->
+<!-- NOTIFICATIONS PANEL -->
+<div class="notif-panel" id="notifPanel">
+  <div class="notif-header">
+    <span><i class="fa-solid fa-bell" style="color:var(--primary)"></i> Notifications</span>
+    <button class="modal-close" id="clearNotifs" style="font-size:.75rem">Clear all</button>
+  </div>
+  <div class="notif-list" id="notifList">
+    <div class="notif-empty">No notifications yet</div>
+  </div>
+</div>
+
+<!-- COMMAND PALETTE -->
+<div class="cmd-overlay" id="cmdOverlay">
+  <div class="cmd-box">
+    <input type="text" id="cmdInput" placeholder="Type a command or search… (Esc to close)">
+    <div class="cmd-results" id="cmdResults"></div>
+  </div>
+</div>
+
+<!-- TASKBAR -->
 <nav class="taskbar">
   <button class="taskbar-item active" data-panel="home"><i class="fa-solid fa-house"></i><span>Home</span></button>
   <button class="taskbar-item" data-panel="player"><i class="fa-solid fa-play"></i><span>Stream</span></button>
@@ -766,21 +451,26 @@
   <button class="taskbar-item" data-panel="developer"><i class="fa-solid fa-terminal"></i><span>Dev</span></button>
 </nav>
 
-<!-- ===== CONTENT ===== -->
 <div class="content">
 
-  <!-- ===== HOME ===== -->
+  <!-- HOME -->
   <section id="home" class="panel active-panel">
     <div class="hero">
       <div class="hero-content">
         <span class="badge"><i class="fa-regular fa-star"></i> Now Streaming</span>
-        <h1>ZOS StreamOS 4.3</h1>
+        <h1>ZOS StreamOS 4.0</h1>
         <p>Cinematic TV experience. Watch, play, and connect — all in one place.</p>
         <div class="hero-actions">
           <button class="btn-primary" data-panel="player"><i class="fa-regular fa-circle-play"></i> Start Watching</button>
+          <button class="btn-secondary" id="surpriseBtn"><i class="fa-solid fa-shuffle"></i> Surprise Me</button>
           <button class="btn-secondary" id="accountTile"><i class="fa-regular fa-user"></i> Profile</button>
         </div>
       </div>
+    </div>
+
+    <div id="continueSection" style="display:none">
+      <div class="section-header"><h2>⏯️ Continue Watching</h2></div>
+      <div class="show-grid" id="continueGrid"></div>
     </div>
 
     <div class="section-header">
@@ -789,23 +479,26 @@
     </div>
     <div class="show-grid" id="featuredShows"></div>
 
-    <div class="section-header">
-      <h2>📱 Quick Launch</h2>
+    <div id="watchlistSection" style="display:none">
+      <div class="section-header"><h2>⭐ Your Watchlist</h2></div>
+      <div class="show-grid" id="watchlistGrid"></div>
     </div>
-    <div class="show-grid" style="grid-template-columns:repeat(auto-fill, minmax(140px,1fr));">
+
+    <div class="section-header"><h2>📱 Quick Launch</h2></div>
+    <div class="show-grid" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr))">
       <div class="show-card" data-panel="player"><div class="thumb">🎬</div><h4>Stream</h4></div>
       <div class="show-card" data-panel="games"><div class="thumb">🎮</div><h4>Games</h4></div>
       <div class="show-card" data-panel="apps"><div class="thumb">🧩</div><h4>Apps</h4></div>
       <div class="show-card" data-panel="airplay"><div class="thumb">📡</div><h4>AirPlay</h4></div>
       <div class="show-card" data-panel="broadcast"><div class="thumb">🌐</div><h4>Broadcast</h4></div>
-      <div class="show-card" id="accountTile"><div class="thumb">👤</div><h4>Account</h4></div>
+      <div class="show-card" id="accountTile2"><div class="thumb">👤</div><h4>Account</h4></div>
     </div>
   </section>
 
-  <!-- ===== PLAYER ===== -->
+  <!-- PLAYER -->
   <section id="player" class="panel">
     <div class="glass-panel">
-      <h2 style="margin-bottom:6px;"><i class="fa-regular fa-circle-play" style="color:var(--primary);"></i> Stream Player</h2>
+      <h2 style="margin-bottom:6px"><i class="fa-regular fa-circle-play" style="color:var(--primary)"></i> Stream Player</h2>
       <div class="category-pills" id="categoryFilter">
         <button class="active" data-category="all">All</button>
         <button data-category="stem">🔬 STEM</button>
@@ -827,161 +520,189 @@
       </div>
 
       <div class="stream-controls">
-        <input type="text" id="streamUrl" placeholder="YouTube URL or direct video link..." value="https://www.youtube.com/embed/dQw4w9WgXcQ">
+        <input type="text" id="streamUrl" placeholder="YouTube URL or direct video link…" value="https://www.youtube.com/embed/dQw4w9WgXcQ">
         <button class="btn-primary" id="playMediaBtn"><i class="fa-regular fa-circle-play"></i> Play</button>
+        <button class="btn-secondary" id="addToQueueBtn" title="Add to queue"><i class="fa-solid fa-list"></i></button>
+      </div>
+
+      <div id="queueSection" style="display:none;margin-bottom:20px">
+        <h4 style="font-size:.85rem;color:var(--text-secondary);margin-bottom:8px">📋 Queue</h4>
+        <div id="queueList"></div>
       </div>
 
       <div class="show-grid" id="showsGrid"></div>
     </div>
   </section>
 
-  <!-- ===== AIRPLAY ===== -->
+  <!-- AIRPLAY -->
   <section id="airplay" class="panel">
     <div class="glass-panel">
-      <h2><i class="fa-solid fa-tower-broadcast" style="color:var(--secondary);"></i> AirPlay</h2>
-      <div style="background:rgba(5,117,230,0.08);border-left:3px solid var(--secondary);padding:16px;border-radius:12px;margin-bottom:20px;">
-        <p style="font-weight:500;"><i class="fa-regular fa-circle-info"></i> Tap the AirPlay icon on any video to cast to your TV.</p>
-        <p style="color:var(--text-secondary);font-size:0.85rem;margin-top:4px;">Works with YouTube, MP4, and most streaming formats.</p>
+      <h2><i class="fa-solid fa-tower-broadcast" style="color:var(--secondary)"></i> AirPlay</h2>
+      <div style="background:rgba(5,117,230,.08);border-left:3px solid var(--secondary);padding:16px;border-radius:12px;margin-bottom:20px">
+        <p style="font-weight:500"><i class="fa-regular fa-circle-info"></i> Tap the AirPlay icon on any video to cast to your TV.</p>
+        <p style="color:var(--text-secondary);font-size:.85rem;margin-top:4px">Works with YouTube, MP4, and most streaming formats.</p>
       </div>
-      <div style="display:flex;gap:12px;flex-wrap:wrap;">
-        <button class="btn-primary" id="testAirPlayBtn" style="background:var(--secondary);"><i class="fa-regular fa-circle-play"></i> Test AirPlay Video</button>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button class="btn-primary" id="testAirPlayBtn" style="background:var(--secondary)"><i class="fa-regular fa-circle-play"></i> Test AirPlay Video</button>
         <button class="btn-secondary" id="mirrorScreenAirPlayBtn"><i class="fa-regular fa-copy"></i> Screen Mirror</button>
       </div>
     </div>
   </section>
 
-  <!-- ===== GAMES ===== -->
+  <!-- GAMES -->
   <section id="games" class="panel">
     <div class="glass-panel">
-      <h2><i class="fa-solid fa-gamepad" style="color:var(--primary);"></i> Live Games</h2>
-      <div class="show-grid" style="grid-template-columns:repeat(auto-fill, minmax(160px,1fr));">
+      <h2><i class="fa-solid fa-gamepad" style="color:var(--primary)"></i> Live Games</h2>
+      <div class="show-grid" style="grid-template-columns:repeat(auto-fill,minmax(160px,1fr))">
         <div class="show-card" data-game="kahoot"><div class="thumb">🏆</div><h4>Kahoot!</h4></div>
         <div class="show-card" data-game="blooket"><div class="thumb">👑</div><h4>Blooket</h4></div>
         <div class="show-card" data-game="quizizz"><div class="thumb">❓</div><h4>Quizizz</h4></div>
         <div class="show-card" data-game="gimkit"><div class="thumb">⚡</div><h4>Gimkit</h4></div>
       </div>
-      <div id="gameEmbedContainer" class="hidden" style="margin-top:16px;display:none;">
-        <div class="video-stage" style="min-height:400px;">
-          <iframe id="gameIframe" style="width:100%;height:100%;border:none;position:absolute;top:0;left:0;background:#000;"></iframe>
+      <div id="gameEmbedContainer" style="margin-top:16px;display:none">
+        <div class="video-stage" style="min-height:400px">
+          <iframe id="gameIframe" style="width:100%;height:100%;border:none;position:absolute;top:0;left:0;background:#000" allow="fullscreen"></iframe>
         </div>
-        <button class="btn-secondary" id="closeGameBtn" style="margin-top:12px;"><i class="fa-regular fa-circle-xmark"></i> Close Game</button>
+        <button class="btn-secondary" id="closeGameBtn" style="margin-top:12px"><i class="fa-regular fa-circle-xmark"></i> Close Game</button>
       </div>
     </div>
   </section>
 
-  <!-- ===== APPS ===== -->
+  <!-- APPS -->
   <section id="apps" class="panel">
     <div class="glass-panel">
-      <h2><i class="fa-solid fa-cube" style="color:var(--primary);"></i> Mini Apps</h2>
-      <div class="show-grid" style="grid-template-columns:repeat(auto-fill, minmax(140px,1fr));">
+      <h2><i class="fa-solid fa-cube" style="color:var(--primary)"></i> Mini Apps</h2>
+      <div class="show-grid" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr))">
         <div class="show-card" data-app="calculator"><div class="thumb">🧮</div><h4>Calculator</h4></div>
         <div class="show-card" data-app="whiteboard"><div class="thumb">✏️</div><h4>Whiteboard</h4></div>
         <div class="show-card" data-app="timer"><div class="thumb">⏱️</div><h4>Timer</h4></div>
         <div class="show-card" data-app="notes"><div class="thumb">📝</div><h4>Notes</h4></div>
+        <div class="show-card" data-app="stopwatch"><div class="thumb">⏲️</div><h4>Stopwatch</h4></div>
+        <div class="show-card" data-app="dice"><div class="thumb">🎲</div><h4>Dice</h4></div>
+        <div class="show-card" data-app="coin"><div class="thumb">🪙</div><h4>Coin Flip</h4></div>
+        <div class="show-card" data-app="password"><div class="thumb">🔐</div><h4>Password Gen</h4></div>
       </div>
-      <div id="miniAppContainer" class="hidden" style="margin-top:16px;display:none;background:var(--bg-deep);border-radius:var(--radius-card);padding:20px;border:1px solid rgba(255,255,255,0.04);">
+      <div id="miniAppContainer" style="margin-top:16px;display:none;background:var(--bg-deep);border-radius:var(--radius-card);padding:20px;border:1px solid rgba(255,255,255,.04)">
         <div id="appContent"></div>
-        <button class="btn-secondary" id="closeAppBtn" style="margin-top:12px;"><i class="fa-regular fa-circle-xmark"></i> Close App</button>
+        <button class="btn-secondary" id="closeAppBtn" style="margin-top:12px"><i class="fa-regular fa-circle-xmark"></i> Close App</button>
       </div>
     </div>
   </section>
 
-  <!-- ===== BROADCAST ===== -->
+  <!-- BROADCAST -->
   <section id="broadcast" class="panel">
     <div class="glass-panel">
-      <h2><i class="fa-solid fa-globe" style="color:var(--primary);"></i> IP Broadcast</h2>
-      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
-        <input type="text" id="ipStreamUrl" placeholder="http://your-ip:8080/stream" style="flex:1;min-width:200px;background:var(--bg-deep);border:1px solid rgba(255,255,255,0.06);border-radius:40px;padding:12px 20px;color:var(--text-primary);outline:none;">
+      <h2><i class="fa-solid fa-globe" style="color:var(--primary)"></i> IP Broadcast</h2>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px">
+        <input type="text" id="ipStreamUrl" class="ip-input" placeholder="http://your-ip:8080/stream">
+        <input type="text" id="ipStreamName" class="ip-input" style="max-width:160px" placeholder="Name (optional)">
         <button class="btn-primary" id="addBroadcastUrlBtn">Add Source</button>
       </div>
       <div id="broadcastUrlsList"></div>
-      <div style="background:var(--bg-deep);border-radius:var(--radius-card);padding:16px;margin-top:16px;border:1px solid rgba(255,255,255,0.04);">
-        <h4 style="margin-bottom:6px;">🌐 Local IP</h4>
-        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-          <span id="localIpDisplay" style="background:rgba(255,255,255,0.04);padding:8px 18px;border-radius:30px;font-family:monospace;font-size:0.9rem;">Detecting...</span>
+      <div style="background:var(--bg-deep);border-radius:var(--radius-card);padding:16px;margin-top:16px;border:1px solid rgba(255,255,255,.04)">
+        <h4 style="margin-bottom:6px">🌐 Local IP</h4>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <span id="localIpDisplay" style="background:rgba(255,255,255,.04);padding:8px 18px;border-radius:30px;font-family:monospace;font-size:.9rem">Detecting…</span>
           <button class="btn-secondary" id="copyIpBtn"><i class="fa-regular fa-copy"></i> Copy</button>
+          <button class="btn-secondary" id="qrIpBtn"><i class="fa-solid fa-qrcode"></i> QR</button>
         </div>
+        <div id="qrContainer" style="display:none;margin-top:10px"></div>
       </div>
     </div>
   </section>
 
-  <!-- ===== CHAT ===== -->
+  <!-- CHAT -->
   <section id="lanchat" class="panel">
     <div class="glass-panel">
-      <h2><i class="fa-solid fa-comments" style="color:var(--primary);"></i> P2P Chat</h2>
+      <h2><i class="fa-solid fa-comments" style="color:var(--primary)"></i> P2P Chat</h2>
       <div class="coming-soon">
         <i class="fa-regular fa-clock"></i>
         <h3>Coming Soon</h3>
         <p>Real-time peer-to-peer messaging is in development.</p>
-        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
-          <span style="background:rgba(0,242,96,0.06);padding:6px 18px;border-radius:30px;border:1px solid rgba(0,242,96,0.1);font-size:0.8rem;">🔜 Q4 2025</span>
-          <span style="background:rgba(0,242,96,0.06);padding:6px 18px;border-radius:30px;border:1px solid rgba(0,242,96,0.1);font-size:0.8rem;">💬 Group & P2P</span>
+        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+          <span style="background:rgba(0,242,96,.06);padding:6px 18px;border-radius:30px;border:1px solid var(--primary-glow);font-size:.8rem">🔜 Q4 2025</span>
+          <span style="background:rgba(0,242,96,.06);padding:6px 18px;border-radius:30px;border:1px solid var(--primary-glow);font-size:.8rem">💬 Group & P2P</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ===== MEDIA ===== -->
+  <!-- MEDIA -->
   <section id="channels" class="panel">
     <div class="glass-panel">
-      <h2><i class="fa-solid fa-folder" style="color:var(--primary);"></i> Media Library</h2>
-      <div id="channelVideos" class="show-grid" style="grid-template-columns:repeat(auto-fill, minmax(240px,1fr));"></div>
-      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:16px;align-items:center;">
-        <input type="file" id="uploadFile" accept="video/*" style="flex:1;min-width:200px;background:var(--bg-deep);border:1px solid rgba(255,255,255,0.06);border-radius:40px;padding:10px 18px;color:var(--text-primary);">
-        <button class="btn-primary" id="uploadToChannelBtn"><i class="fa-regular fa-upload"></i> Upload</button>
+      <h2><i class="fa-solid fa-folder" style="color:var(--primary)"></i> Media Library</h2>
+      <div id="channelVideos" class="show-grid" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr))"></div>
+      <div id="dropZone" style="border:2px dashed rgba(255,255,255,.08);border-radius:16px;padding:24px;text-align:center;margin-top:16px;color:var(--text-muted);font-size:.85rem;transition:var(--transition)">
+        <i class="fa-solid fa-cloud-arrow-up" style="font-size:1.6rem;margin-bottom:8px;display:block;color:var(--primary);opacity:.6"></i>
+        Drag & drop videos here, or
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:16px;align-items:center;justify-content:center">
+          <input type="file" id="uploadFile" accept="video/*" style="flex:1;min-width:200px;background:var(--bg-deep);border:1px solid rgba(255,255,255,.06);border-radius:40px;padding:10px 18px;color:var(--text-primary);font-family:inherit">
+          <button class="btn-primary" id="uploadToChannelBtn"><i class="fa-regular fa-upload"></i> Upload</button>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ===== DEV ===== -->
+  <!-- DEV -->
   <section id="developer" class="panel">
     <div class="glass-panel">
-      <h2><i class="fa-solid fa-terminal" style="color:var(--primary);"></i> Dev Console</h2>
-      <textarea id="codeArea" rows="5" style="width:100%;background:var(--bg-deep);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px;color:var(--text-primary);font-family:monospace;font-size:0.9rem;resize:vertical;outline:none;" placeholder="console.log('Hello TV');"></textarea>
-      <button class="btn-primary" id="runCodeBtn" style="margin-top:12px;"><i class="fa-regular fa-play"></i> Run</button>
-      <div id="devOutput" style="background:var(--bg-deep);border:1px solid rgba(255,255,255,0.04);border-radius:14px;padding:16px;margin-top:12px;font-family:monospace;font-size:0.85rem;min-height:60px;color:var(--text-secondary);"></div>
+      <h2><i class="fa-solid fa-terminal" style="color:var(--primary)"></i> Dev Console</h2>
+      <textarea id="codeArea" rows="5" style="width:100%;background:var(--bg-deep);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:16px;color:var(--text-primary);font-family:monospace;font-size:.9rem;resize:vertical;outline:none" placeholder="console.log('Hello TV');"></textarea>
+      <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn-primary" id="runCodeBtn"><i class="fa-regular fa-play"></i> Run</button>
+        <button class="btn-secondary" id="exportDataBtn"><i class="fa-solid fa-download"></i> Export Data</button>
+        <button class="btn-secondary" id="importDataBtn"><i class="fa-solid fa-upload"></i> Import Data</button>
+        <button class="btn-danger" id="resetDataBtn"><i class="fa-solid fa-trash"></i> Reset All</button>
+      </div>
+      <input type="file" id="importFile" accept="application/json" style="display:none">
+      <div id="devOutput" style="background:var(--bg-deep);border:1px solid rgba(255,255,255,.04);border-radius:14px;padding:16px;margin-top:12px;font-family:monospace;font-size:.85rem;min-height:60px;color:var(--text-secondary);white-space:pre-wrap"></div>
     </div>
   </section>
 </div>
 
-<!-- ===== ACCOUNT MODAL ===== -->
+<!-- ACCOUNT MODAL -->
 <div class="modal-overlay" id="accountModal">
   <div class="modal-box">
     <h2>👤 Account <button class="modal-close" id="closeModalBtn">✕</button></h2>
 
-    <div style="margin-bottom:20px;">
-      <h3 style="font-size:0.85rem;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:10px;">Switch User</h3>
+    <div style="margin-bottom:20px">
+      <h3 style="font-size:.85rem;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px">Switch User</h3>
       <div id="userList"></div>
     </div>
 
-    <div style="border-top:1px solid rgba(255,255,255,0.04);padding-top:20px;margin-bottom:20px;">
-      <h3 style="font-size:0.85rem;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:12px;">Create User</h3>
+    <div style="border-top:1px solid rgba(255,255,255,.04);padding-top:20px;margin-bottom:20px">
+      <h3 style="font-size:.85rem;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.04em;margin-bottom:12px">Create User</h3>
       <div class="input-group"><input type="text" id="newUserName" placeholder="Full Name"></div>
       <div class="input-group"><input type="email" id="newUserEmail" placeholder="Email"></div>
       <div class="input-group"><input type="password" id="newUserPassword" placeholder="Password"></div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;">
-        <button class="btn-primary" id="createUserBtn" style="flex:1;">Create Standard</button>
-        <button class="btn-primary" id="createKidsBtn" style="flex:1;background:#ff6b35;border-color:#ff6b35;">🧒 Kids Account</button>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn-primary" id="createUserBtn" style="flex:1">Create Standard</button>
+        <button class="btn-primary" id="createKidsBtn" style="flex:1;background:#ff6b35">🧒 Kids Account</button>
       </div>
     </div>
 
-    <div style="border-top:1px solid rgba(255,255,255,0.04);padding-top:20px;margin-bottom:20px;">
-      <h3 style="font-size:0.85rem;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:12px;">🎫 Tickets</h3>
-      <div style="background:rgba(255,215,0,0.04);padding:14px;border-radius:14px;border:1px solid rgba(255,215,0,0.08);margin-bottom:12px;">
-        <p>Balance: <strong id="zpointsStoreDisplay" style="color:#ffd966;">0</strong> Tickets</p>
-        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
-          <input type="text" id="zpointsCode" placeholder="Enter code" style="flex:1;min-width:140px;background:var(--bg-deep);border:1px solid rgba(255,255,255,0.06);border-radius:30px;padding:10px 16px;color:var(--text-primary);outline:none;">
-          <button class="btn-primary" id="redeemZpointsBtn" style="padding:10px 20px;">Redeem</button>
+    <div style="border-top:1px solid rgba(255,255,255,.04);padding-top:20px;margin-bottom:20px">
+      <h3 style="font-size:.85rem;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.04em;margin-bottom:12px">🎫 Tickets</h3>
+      <div style="background:rgba(255,215,0,.04);padding:14px;border-radius:14px;border:1px solid rgba(255,215,0,.08);margin-bottom:12px">
+        <p>Balance: <strong id="zpointsStoreDisplay" style="color:#ffd966">0</strong> Tickets</p>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+          <input type="text" id="zpointsCode" placeholder="Enter code" style="flex:1;min-width:140px;background:var(--bg-deep);border:1px solid rgba(255,255,255,.06);border-radius:30px;padding:10px 16px;color:var(--text-primary);outline:none">
+          <button class="btn-primary" id="redeemZpointsBtn" style="padding:10px 20px">Redeem</button>
         </div>
       </div>
       <div class="store-grid" id="storeItems"></div>
     </div>
 
-    <div style="border-top:1px solid rgba(255,255,255,0.04);padding-top:20px;">
-      <h3 style="font-size:0.85rem;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:12px;">Customize Profile</h3>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;">
-        <input type="text" id="profileEmoji" placeholder="Avatar emoji (e.g. 🦄)" style="flex:1;min-width:100px;background:var(--bg-deep);border:1px solid rgba(255,255,255,0.06);border-radius:30px;padding:10px 16px;color:var(--text-primary);outline:none;">
-        <input type="text" id="profileBg" placeholder="BG color (e.g. #1a1a2e)" style="flex:1;min-width:100px;background:var(--bg-deep);border:1px solid rgba(255,255,255,0.06);border-radius:30px;padding:10px 16px;color:var(--text-primary);outline:none;">
+    <div style="border-top:1px solid rgba(255,255,255,.04);padding-top:20px;margin-bottom:20px">
+      <h3 style="font-size:.85rem;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.04em;margin-bottom:12px">🏆 Achievements</h3>
+      <div class="ach-grid" id="achGrid"></div>
+    </div>
+
+    <div style="border-top:1px solid rgba(255,255,255,.04);padding-top:20px">
+      <h3 style="font-size:.85rem;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.04em;margin-bottom:12px">Customize Profile</h3>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <input type="text" id="profileEmoji" placeholder="Avatar emoji" style="flex:1;min-width:100px;background:var(--bg-deep);border:1px solid rgba(255,255,255,.06);border-radius:30px;padding:10px 16px;color:var(--text-primary);outline:none">
+        <input type="color" id="profileColor" value="#00f260" style="width:56px;height:42px;border-radius:30px;background:var(--bg-deep);border:1px solid rgba(255,255,255,.06);cursor:pointer">
         <button class="btn-primary" id="updateProfileBtn">Update</button>
       </div>
     </div>
@@ -989,443 +710,788 @@
 </div>
 
 <script>
-  // ================================================================
-  //  TV·OS  —  FULL APPLICATION LOGIC
-  // ================================================================
+/* ================================================================
+   ZOS StreamOS 4.0 — FULL APPLICATION LOGIC
+   ================================================================ */
 
-  // ---- DATA ----
-  const SHOWS = [
-    { id:'stem1', title:'Mark Rober - Science', category:'stem', embed:'https://www.youtube.com/embed/9vK3VcV4YkQ', icon:'🔬' },
-    { id:'stem2', title:'Vsauce - Mind Field', category:'stem', embed:'https://www.youtube.com/embed/1Xp_4O5L9X0', icon:'🧠' },
-    { id:'stem3', title:'SmarterEveryDay', category:'stem', embed:'https://www.youtube.com/embed/8MtyUjX0ZtU', icon:'⚛️' },
-    { id:'stem4', title:'Kurzgesagt', category:'stem', embed:'https://www.youtube.com/embed/5J6j_1f1X0E', icon:'🌌' },
-    { id:'music1', title:'Interstellar Piano', category:'music', embed:'https://www.youtube.com/embed/PqM9z_B0_hE', icon:'🎹' },
-    { id:'music2', title:'Epic Orchestral', category:'music', embed:'https://www.youtube.com/embed/4ZxZ-yX8xX4', icon:'🎻' },
-    { id:'music3', title:'Lo-Fi Beats', category:'music', embed:'https://www.youtube.com/embed/5qap5aO4i9A', icon:'🎧' },
-    { id:'music4', title:'Guitar Masterclass', category:'music', embed:'https://www.youtube.com/embed/GXQ91fj0PqM', icon:'🎸' },
-    { id:'art1', title:'Bob Ross - Joy', category:'art', embed:'https://www.youtube.com/embed/oh5p5f5_2a0', icon:'🎨' },
-    { id:'art2', title:'Digital Speedpaint', category:'art', embed:'https://www.youtube.com/embed/MpDqVXqk8vA', icon:'🖌️' },
-    { id:'art3', title:'Sculpture Masterclass', category:'art', embed:'https://www.youtube.com/embed/9vK3VcV4YkQ', icon:'🗿' },
-    { id:'art4', title:'Calligraphy', category:'art', embed:'https://www.youtube.com/embed/1Xp_4O5L9X0', icon:'✍️' },
-    { id:'gym1', title:'Home Workout', category:'gym', embed:'https://www.youtube.com/embed/8MtyUjX0ZtU', icon:'💪' },
-    { id:'gym2', title:'Yoga Beginners', category:'gym', embed:'https://www.youtube.com/embed/5J6j_1f1X0E', icon:'🧘' },
-    { id:'gym3', title:'HIIT Cardio', category:'gym', embed:'https://www.youtube.com/embed/9vK3VcV4YkQ', icon:'🏋️' },
-    { id:'gym4', title:'Stretching', category:'gym', embed:'https://www.youtube.com/embed/1Xp_4O5L9X0', icon:'🤸' },
-    { id:'react1', title:'Try Not to Laugh', category:'reacting', embed:'https://www.youtube.com/embed/4ZxZ-yX8xX4', icon:'😂' },
-    { id:'react2', title:'90s Nostalgia', category:'reacting', embed:'https://www.youtube.com/embed/PqM9z_B0_hE', icon:'📺' },
-    { id:'react3', title:'Cooking Reactions', category:'reacting', embed:'https://www.youtube.com/embed/5qap5aO4i9A', icon:'🍳' },
-    { id:'react4', title:'Epic Moments', category:'reacting', embed:'https://www.youtube.com/embed/GXQ91fj0PqM', icon:'😱' },
-    { id:'space1', title:'NASA - Mars', category:'space', embed:'https://www.youtube.com/embed/5J6j_1f1X0E', icon:'🚀' },
-    { id:'space2', title:'Hubble Discoveries', category:'space', embed:'https://www.youtube.com/embed/8MtyUjX0ZtU', icon:'🔭' },
-    { id:'space3', title:'Black Holes', category:'space', embed:'https://www.youtube.com/embed/9vK3VcV4YkQ', icon:'⚫' },
-    { id:'space4', title:'ISS Tour', category:'space', embed:'https://www.youtube.com/embed/1Xp_4O5L9X0', icon:'🛰️' },
-    { id:'gaming1', title:'Minecraft Hardcore', category:'gaming', embed:'https://www.youtube.com/embed/4ZxZ-yX8xX4', icon:'⛏️' },
-    { id:'gaming2', title:'Fortnite Highlights', category:'gaming', embed:'https://www.youtube.com/embed/PqM9z_B0_hE', icon:'🎯' },
-    { id:'gaming3', title:'Valorant Pro Tips', category:'gaming', embed:'https://www.youtube.com/embed/5qap5aO4i9A', icon:'🎮' },
-    { id:'gaming4', title:'Indie Games Showcase', category:'gaming', embed:'https://www.youtube.com/embed/GXQ91fj0PqM', icon:'🕹️' },
-    { id:'edu1', title:'Ancient Civilizations', category:'education', embed:'https://www.youtube.com/embed/8MtyUjX0ZtU', icon:'🏛️' },
-    { id:'edu2', title:'Learn French', category:'education', embed:'https://www.youtube.com/embed/5J6j_1f1X0E', icon:'🇫🇷' },
-    { id:'edu3', title:'World Geography', category:'education', embed:'https://www.youtube.com/embed/9vK3VcV4YkQ', icon:'🌍' },
-    { id:'edu4', title:'Financial Literacy', category:'education', embed:'https://www.youtube.com/embed/1Xp_4O5L9X0', icon:'💰' },
-    { id:'comedy1', title:'Stand Up Special', category:'comedy', embed:'https://www.youtube.com/embed/4ZxZ-yX8xX4', icon:'🎤' },
-    { id:'comedy2', title:'Sketch Comedy', category:'comedy', embed:'https://www.youtube.com/embed/PqM9z_B0_hE', icon:'🎭' },
-    { id:'comedy3', title:'Prank Compilation', category:'comedy', embed:'https://www.youtube.com/embed/5qap5aO4i9A', icon:'🤡' },
-    { id:'comedy4', title:'Roasts & Clapbacks', category:'comedy', embed:'https://www.youtube.com/embed/GXQ91fj0PqM', icon:'🔥' }
-  ];
+// ---- DATA ----
+const SHOWS = [
+  { id:'stem1', title:'Mark Rober - Science', category:'stem', embed:'https://www.youtube.com/embed/9vK3VcV4YkQ', icon:'🔬' },
+  { id:'stem2', title:'Vsauce - Mind Field', category:'stem', embed:'https://www.youtube.com/embed/1Xp_4O5L9X0', icon:'🧠' },
+  { id:'stem3', title:'SmarterEveryDay', category:'stem', embed:'https://www.youtube.com/embed/8MtyUjX0ZtU', icon:'⚛️' },
+  { id:'stem4', title:'Kurzgesagt', category:'stem', embed:'https://www.youtube.com/embed/5J6j_1f1X0E', icon:'🌌' },
+  { id:'music1', title:'Interstellar Piano', category:'music', embed:'https://www.youtube.com/embed/PqM9z_B0_hE', icon:'🎹' },
+  { id:'music2', title:'Epic Orchestral', category:'music', embed:'https://www.youtube.com/embed/4ZxZ-yX8xX4', icon:'🎻' },
+  { id:'music3', title:'Lo-Fi Beats', category:'music', embed:'https://www.youtube.com/embed/5qap5aO4i9A', icon:'🎧' },
+  { id:'music4', title:'Guitar Masterclass', category:'music', embed:'https://www.youtube.com/embed/GXQ91fj0PqM', icon:'🎸' },
+  { id:'art1', title:'Bob Ross - Joy', category:'art', embed:'https://www.youtube.com/embed/oh5p5f5_2a0', icon:'🎨' },
+  { id:'art2', title:'Digital Speedpaint', category:'art', embed:'https://www.youtube.com/embed/MpDqVXqk8vA', icon:'🖌️' },
+  { id:'art3', title:'Sculpture Masterclass', category:'art', embed:'https://www.youtube.com/embed/9vK3VcV4YkQ', icon:'🗿' },
+  { id:'art4', title:'Calligraphy', category:'art', embed:'https://www.youtube.com/embed/1Xp_4O5L9X0', icon:'✍️' },
+  { id:'gym1', title:'Home Workout', category:'gym', embed:'https://www.youtube.com/embed/8MtyUjX0ZtU', icon:'💪' },
+  { id:'gym2', title:'Yoga Beginners', category:'gym', embed:'https://www.youtube.com/embed/5J6j_1f1X0E', icon:'🧘' },
+  { id:'gym3', title:'HIIT Cardio', category:'gym', embed:'https://www.youtube.com/embed/9vK3VcV4YkQ', icon:'🏋️' },
+  { id:'gym4', title:'Stretching', category:'gym', embed:'https://www.youtube.com/embed/1Xp_4O5L9X0', icon:'🤸' },
+  { id:'react1', title:'Try Not to Laugh', category:'reacting', embed:'https://www.youtube.com/embed/4ZxZ-yX8xX4', icon:'😂' },
+  { id:'react2', title:'90s Nostalgia', category:'reacting', embed:'https://www.youtube.com/embed/PqM9z_B0_hE', icon:'📺' },
+  { id:'react3', title:'Cooking Reactions', category:'reacting', embed:'https://www.youtube.com/embed/5qap5aO4i9A', icon:'🍳' },
+  { id:'react4', title:'Epic Moments', category:'reacting', embed:'https://www.youtube.com/embed/GXQ91fj0PqM', icon:'😱' },
+  { id:'space1', title:'NASA - Mars', category:'space', embed:'https://www.youtube.com/embed/5J6j_1f1X0E', icon:'🚀' },
+  { id:'space2', title:'Hubble Discoveries', category:'space', embed:'https://www.youtube.com/embed/8MtyUjX0ZtU', icon:'🔭' },
+  { id:'space3', title:'Black Holes', category:'space', embed:'https://www.youtube.com/embed/9vK3VcV4YkQ', icon:'⚫' },
+  { id:'space4', title:'ISS Tour', category:'space', embed:'https://www.youtube.com/embed/1Xp_4O5L9X0', icon:'🛰️' },
+  { id:'gaming1', title:'Minecraft Hardcore', category:'gaming', embed:'https://www.youtube.com/embed/4ZxZ-yX8xX4', icon:'⛏️' },
+  { id:'gaming2', title:'Fortnite Highlights', category:'gaming', embed:'https://www.youtube.com/embed/PqM9z_B0_hE', icon:'🎯' },
+  { id:'gaming3', title:'Valorant Pro Tips', category:'gaming', embed:'https://www.youtube.com/embed/5qap5aO4i9A', icon:'🎮' },
+  { id:'gaming4', title:'Indie Games Showcase', category:'gaming', embed:'https://www.youtube.com/embed/GXQ91fj0PqM', icon:'🕹️' },
+  { id:'edu1', title:'Ancient Civilizations', category:'education', embed:'https://www.youtube.com/embed/8MtyUjX0ZtU', icon:'🏛️' },
+  { id:'edu2', title:'Learn French', category:'education', embed:'https://www.youtube.com/embed/5J6j_1f1X0E', icon:'🇫🇷' },
+  { id:'edu3', title:'World Geography', category:'education', embed:'https://www.youtube.com/embed/9vK3VcV4YkQ', icon:'🌍' },
+  { id:'edu4', title:'Financial Literacy', category:'education', embed:'https://www.youtube.com/embed/1Xp_4O5L9X0', icon:'💰' },
+  { id:'comedy1', title:'Stand Up Special', category:'comedy', embed:'https://www.youtube.com/embed/4ZxZ-yX8xX4', icon:'🎤' },
+  { id:'comedy2', title:'Sketch Comedy', category:'comedy', embed:'https://www.youtube.com/embed/PqM9z_B0_hE', icon:'🎭' },
+  { id:'comedy3', title:'Prank Compilation', category:'comedy', embed:'https://www.youtube.com/embed/5qap5aO4i9A', icon:'🤡' },
+  { id:'comedy4', title:'Roasts & Clapbacks', category:'comedy', embed:'https://www.youtube.com/embed/GXQ91fj0PqM', icon:'🔥' }
+];
 
-  const STORE = [
-    { id:'show1', name:'🎬 Premium Show Pack', price:200 },
-    { id:'show2', name:'🎭 Comedy Special', price:150 },
-    { id:'font1', name:'🎨 Neon Font Pack', price:50 },
-    { id:'font2', name:'🎨 Retro Font Pack', price:50 },
-    { id:'pass1', name:'🔓 Parental Pass', price:300 },
-    { id:'sport1', name:'⚽ LA Galaxy', price:100 },
-    { id:'sport2', name:'🏀 LA Lakers', price:100 },
-    { id:'sport3', name:'⚾ NY Yankees', price:100 },
-    { id:'sport4', name:'🏈 Dallas Cowboys', price:100 }
-  ];
+const STORE = [
+  { id:'show1', name:'🎬 Premium Show Pack', price:200 },
+  { id:'show2', name:'🎭 Comedy Special', price:150 },
+  { id:'font1', name:'🎨 Neon Font Pack', price:50 },
+  { id:'font2', name:'🎨 Retro Font Pack', price:50 },
+  { id:'pass1', name:'🔓 Parental Pass', price:300 },
+  { id:'sport1', name:'⚽ LA Galaxy', price:100 },
+  { id:'sport2', name:'🏀 LA Lakers', price:100 },
+  { id:'sport3', name:'⚾ NY Yankees', price:100 },
+  { id:'sport4', name:'🏈 Dallas Cowboys', price:100 }
+];
 
-  const GAME_URLS = { kahoot:'https://kahoot.it/', blooket:'https://play.blooket.com/play', quizizz:'https://quizizz.com/join', gimkit:'https://www.gimkit.com/join' };
+const GAME_URLS = { kahoot:'https://kahoot.it/', blooket:'https://play.blooket.com/play', quizizz:'https://quizizz.com/join', gimkit:'https://www.gimkit.com/join' };
 
-  const APP_TEMPLATES = {
-    calculator: `<div><input type="text" id="calcDisplay" readonly style="width:100%;text-align:right;font-size:1.8rem;background:var(--bg-deep);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:14px;color:var(--text-primary);"><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px;">${[7,8,9,'/',4,5,6,'*',1,2,3,'-',0,'.','=','+'].map(b => `<button data-calc="${b}" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.04);border-radius:12px;padding:14px;color:var(--text-primary);font-size:1.2rem;cursor:pointer;transition:0.15s;">${b}</button>`).join('')}<button id="calcClear" style="grid-column:span 4;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.04);border-radius:12px;padding:14px;color:var(--text-primary);cursor:pointer;">Clear</button></div></div>`,
-    whiteboard: `<canvas id="miniCanvas" width="500" height="300" style="width:100%;background:#fff;border-radius:14px;cursor:crosshair;touch-action:none;"></canvas><button id="clearCanvasBtn" class="btn-secondary" style="margin-top:10px;">Clear</button><script>let draw=false;const c=document.getElementById('miniCanvas'),ctx=c.getContext('2d');c.width=500;c.height=300;ctx.fillStyle='#fff';ctx.fillRect(0,0,500,300);ctx.strokeStyle='#00f260';ctx.lineWidth=3;ctx.lineCap='round';ctx.lineJoin='round';function getPos(e){const r=c.getBoundingClientRect();const x=(e.clientX||e.touches?.[0]?.clientX)-r.left;const y=(e.clientY||e.touches?.[0]?.clientY)-r.top;return{x:x*(500/r.width),y:y*(300/r.height)};}function start(e){e.preventDefault();draw=true;const p=getPos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);}function drawMove(e){e.preventDefault();if(!draw)return;const p=getPos(e);ctx.lineTo(p.x,p.y);ctx.stroke();ctx.beginPath();ctx.moveTo(p.x,p.y);}function end(e){draw=false;ctx.beginPath();}c.addEventListener('mousedown',start);c.addEventListener('mousemove',drawMove);c.addEventListener('mouseup',end);c.addEventListener('mouseleave',end);c.addEventListener('touchstart',start);c.addEventListener('touchmove',drawMove);c.addEventListener('touchend',end);document.getElementById('clearCanvasBtn').onclick=()=>{ctx.fillStyle='#fff';ctx.fillRect(0,0,500,300);ctx.beginPath();};<\/script>`,
-    timer: `<div><h4 style="margin-bottom:8px;">⏱️ Timer</h4><div style="display:flex;gap:10px;flex-wrap:wrap;"><input type="number" id="timerSeconds" value="60" style="flex:1;min-width:100px;background:var(--bg-deep);border:1px solid rgba(255,255,255,0.06);border-radius:30px;padding:10px 16px;color:var(--text-primary);"><button class="btn-primary" id="startTimerBtn">Start</button></div><div id="timerDisplay" style="font-size:3.2rem;font-weight:700;font-family:monospace;color:var(--primary);margin-top:12px;">0:00</div><script>let tInt,tSec=0;document.getElementById('startTimerBtn').onclick=()=>{tSec=parseInt(document.getElementById('timerSeconds').value)||0;const d=document.getElementById('timerDisplay');if(tInt)clearInterval(tInt);tInt=setInterval(()=>{if(tSec<=0){clearInterval(tInt);d.innerText='✨ Done!';d.style.color='gold';}else{const m=Math.floor(tSec/60),s=tSec%60;d.innerText=m+':'+(s<10?'0'+s:s);d.style.color='var(--primary)';tSec--;}},1000);};<\/script>`,
-    notes: `<div><h4 style="margin-bottom:8px;">📝 Notes</h4><textarea id="sharedNotes" rows="6" style="width:100%;background:var(--bg-deep);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:14px;color:var(--text-primary);resize:vertical;font-family:inherit;"></textarea><button class="btn-primary" id="saveNotesBtn" style="margin-top:10px;">💾 Save</button><script>document.getElementById('saveNotesBtn').onclick=()=>{localStorage.setItem('tvNotes',document.getElementById('sharedNotes').value);showToast('📝 Notes saved!','success');};const saved=localStorage.getItem('tvNotes');if(saved)document.getElementById('sharedNotes').value=saved;<\/script></div>`
-  };
+const ACHIEVEMENTS = [
+  { id:'first_watch', icon:'▶️', name:'First Play', desc:'Watch a show' },
+  { id:'collector', icon:'📚', name:'Collector', desc:'10 watchlist items' },
+  { id:'shopper', icon:'🛍️', name:'Shopper', desc:'Buy from store' },
+  { id:'creator', icon:'👥', name:'Creator', desc:'Create a user' },
+  { id:'explorer', icon:'🧭', name:'Explorer', desc:'Visit all panels' },
+  { id:'coder', icon:'💻', name:'Coder', desc:'Run dev code' }
+];
 
-  // ---- STATE ----
-  let users = {};
-  let currentUser = null;
-  let codes = {};
-  let broadcastUrls = [];
-  let channels = { default: { videos: [] } };
-  let currentCategory = 'all';
+// ---- STATE ----
+let users = {};
+let currentUser = null;
+let codes = {};
+let broadcastUrls = [];
+let channels = { default: { videos: [] } };
+let currentCategory = 'all';
+let queue = [];
+let notifications = [];
+let visitedPanels = new Set();
 
-  // ---- HELPERS ----
-  function store(key, val) { try { localStorage.setItem('tvos_'+key, JSON.stringify(val)); } catch(e) {} }
-  function retrieve(key, fallback) { try { const v = localStorage.getItem('tvos_'+key); return v ? JSON.parse(v) : fallback; } catch(e) { return fallback; } }
-  function toast(msg, type='info', dur=3000) {
-    const c = document.getElementById('toastContainer');
-    const el = document.createElement('div');
-    el.className = 'toast';
-    el.textContent = msg;
-    c.appendChild(el);
-    setTimeout(() => { el.style.opacity='0'; el.style.transform='translateY(10px)'; setTimeout(()=>el.remove(),300); }, dur);
+// ---- HELPERS ----
+const store = (k,v) => { try { localStorage.setItem('tvos_'+k, JSON.stringify(v)); } catch(e){} };
+const retrieve = (k,fb) => { try { const v = localStorage.getItem('tvos_'+k); return v ? JSON.parse(v) : fb; } catch(e){ return fb; } };
+function toast(msg, type='info', dur=3000) {
+  const c = document.getElementById('toastContainer');
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  c.appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transform='translateY(10px)'; setTimeout(()=>el.remove(),300); }, dur);
+}
+function notify(msg) {
+  notifications.unshift({ msg, time: Date.now() });
+  notifications = notifications.slice(0, 50);
+  store('notifications', notifications);
+  renderNotifs();
+}
+function renderNotifs() {
+  const list = document.getElementById('notifList');
+  const btn = document.getElementById('notifBtn');
+  if (!list) return;
+  if (notifications.length === 0) {
+    list.innerHTML = '<div class="notif-empty">No notifications yet</div>';
+    btn.dataset.count = '0';
+    btn.classList.remove('badge');
+    return;
   }
+  btn.dataset.count = notifications.length;
+  btn.classList.add('badge');
+  list.innerHTML = notifications.map(n => `
+    <div class="notif-item">${n.msg}<div class="time">${new Date(n.time).toLocaleTimeString()}</div></div>
+  `).join('');
+}
+function unlockAch(id) {
+  if (!currentUser.achievements) currentUser.achievements = [];
+  if (currentUser.achievements.includes(id)) return;
+  currentUser.achievements.push(id);
+  saveUsers();
+  const a = ACHIEVEMENTS.find(x => x.id === id);
+  if (a) { toast(`${a.icon} Achievement: ${a.name}`, 'success', 4000); notify(`${a.icon} Unlocked: ${a.name}`); }
+}
 
-  // ---- USER SYSTEM ----
-  function initUsers() {
-    users = retrieve('users', { guest: { id:'guest', name:'Guest', avatar:'👤', bg:'#1a1a2e', tickets:0, purchases:[] } });
-    const uid = retrieve('currentUser', 'guest');
-    currentUser = users[uid] || users.guest;
-  }
-  function saveUsers() { store('users', users); store('currentUser', currentUser.id); updateUI(); }
-  function switchUser(id) { if(users[id]) { currentUser=users[id]; saveUsers(); toast(`👋 ${currentUser.name}`, 'success'); } }
-  function createUser(name, email, pass, type='standard') {
-    if(!name||!email||!pass) return toast('Please fill all fields', 'error');
-    const id = 'u'+Date.now();
-    users[id] = { id, name, email, password:pass, type, avatar: type==='kids'?'🧒':'👤', bg:'#1a1a2e', tickets: type==='kids'?50:100, purchases:[] };
-    saveUsers(); switchUser(id);
-    toast(`✅ ${type==='kids'?'Kids ':'User'} created!`, 'success');
-  }
-  function updateProfile(emoji, bg) { if(emoji) currentUser.avatar=emoji; if(bg) currentUser.bg=bg; saveUsers(); toast('Profile updated', 'success'); }
+// ---- USER SYSTEM ----
+function initUsers() {
+  users = retrieve('users', { guest: { id:'guest', name:'Guest', avatar:'👤', bg:'#1a1a2e', tickets:0, purchases:[], watchlist:[], history:[], achievements:[] } });
+  const uid = retrieve('currentUser', 'guest');
+  currentUser = users[uid] || users.guest;
+  if (!currentUser.watchlist) currentUser.watchlist = [];
+  if (!currentUser.history) currentUser.history = [];
+  if (!currentUser.achievements) currentUser.achievements = [];
+}
+function saveUsers() { store('users', users); store('currentUser', currentUser.id); updateUI(); }
+function switchUser(id) { if (users[id]) { currentUser = users[id]; saveUsers(); toast(`👋 ${currentUser.name}`, 'success'); } }
+function createUser(name, email, pass, type='standard') {
+  if (!name || !email || !pass) return toast('Please fill all fields', 'error');
+  const id = 'u' + Date.now();
+  users[id] = { id, name, email, password:pass, type, avatar: type==='kids'?'🧒':'👤', bg:'#1a1a2e', tickets: type==='kids'?50:100, purchases:[], watchlist:[], history:[], achievements:[] };
+  saveUsers(); switchUser(id);
+  toast(`✅ ${type==='kids'?'Kids ':'User'} created!`, 'success');
+  unlockAch('creator');
+}
+function updateProfile(emoji, bg) {
+  if (emoji) currentUser.avatar = emoji;
+  if (bg) currentUser.bg = bg;
+  saveUsers(); toast('Profile updated', 'success');
+}
 
-  // ---- TICKETS ----
-  function initCodes() { codes = retrieve('codes', {}); }
-  function redeemCode(code) {
-    if(!code) return toast('Enter a code', 'error');
-    if(codes[code]) { currentUser.tickets += codes[code]; delete codes[code]; store('codes', codes); saveUsers(); toast(`✅ +${codes[code]||0} Tickets`, 'success'); }
-    else toast('❌ Invalid code', 'error');
-  }
-  function earnTickets(amount) { const code = 'TV'+Math.random().toString(36).substring(2,8).toUpperCase(); codes[code]=amount; store('codes', codes); return code; }
+// ---- TICKETS ----
+function initCodes() { codes = retrieve('codes', {}); }
+function redeemCode(code) {
+  if (!code) return toast('Enter a code', 'error');
+  if (codes[code]) { const amt = codes[code]; currentUser.tickets += amt; delete codes[code]; store('codes', codes); saveUsers(); toast(`✅ +${amt} Tickets`, 'success'); }
+  else toast('❌ Invalid code', 'error');
+}
 
-  // ---- STORE ----
-  function renderStore() {
-    const container = document.getElementById('storeItems');
-    if(!container) return;
-    container.innerHTML = STORE.map(item => `
-      <div class="store-item">
-        <div style="font-size:1.6rem;">${item.name.split(' ')[0]}</div>
-        <div style="font-size:0.8rem;margin:4px 0;">${item.name}</div>
-        <div class="price">🎫 ${item.price}</div>
-        <button data-store="${item.id}" ${currentUser.purchases?.includes(item.id)?'disabled':''}>
-          ${currentUser.purchases?.includes(item.id)?'✅ Owned':'Buy'}
-        </button>
+// ---- STORE ----
+function renderStore() {
+  const c = document.getElementById('storeItems');
+  if (!c) return;
+  c.innerHTML = STORE.map(item => `
+    <div class="store-item">
+      <div style="font-size:1.6rem">${item.name.split(' ')[0]}</div>
+      <div style="font-size:.8rem;margin:4px 0">${item.name}</div>
+      <div class="price">🎫 ${item.price}</div>
+      <button data-store="${item.id}" ${currentUser.purchases?.includes(item.id)?'disabled':''}>${currentUser.purchases?.includes(item.id)?'✅ Owned':'Buy'}</button>
+    </div>
+  `).join('');
+}
+function purchaseItem(id) {
+  const item = STORE.find(i => i.id === id);
+  if (!item) return;
+  if (currentUser.tickets < item.price) return toast(`Need ${item.price} Tickets`, 'error');
+  if (currentUser.purchases?.includes(id)) return toast('Already owned', 'info');
+  currentUser.tickets -= item.price;
+  if (!currentUser.purchases) currentUser.purchases = [];
+  currentUser.purchases.push(id);
+  saveUsers(); renderStore(); toast(`✅ ${item.name}`, 'success');
+  unlockAch('shopper');
+}
+
+// ---- SHOWS ----
+function showCardHTML(s) {
+  const isFav = currentUser.watchlist?.includes(s.id);
+  const hist = currentUser.history?.find(h => h.id === s.id);
+  const prog = hist ? Math.min(100, (hist.progress||0)) : 0;
+  return `
+    <div class="show-card" data-show="${s.id}">
+      <div class="card-actions">
+        <button data-fav="${s.id}" class="${isFav?'fav':''}" title="Watchlist"><i class="fa-${isFav?'solid':'regular'} fa-star"></i></button>
+        <button data-queue="${s.id}" title="Queue"><i class="fa-solid fa-list"></i></button>
       </div>
-    `).join('');
+      <div class="thumb">${s.icon}</div>
+      <h4>${s.title}</h4>
+      <div class="category-tag">${s.category}</div>
+      ${prog > 0 ? `<div class="progress-bar"><div style="width:${prog}%"></div></div>` : ''}
+    </div>
+  `;
+}
+function renderShows(cat='all') {
+  const grid = document.getElementById('showsGrid');
+  if (!grid) return;
+  const filtered = cat === 'all' ? SHOWS : SHOWS.filter(s => s.category === cat);
+  grid.innerHTML = filtered.map(showCardHTML).join('');
+}
+function renderFeatured() {
+  const grid = document.getElementById('featuredShows');
+  if (!grid) return;
+  grid.innerHTML = SHOWS.slice(0,6).map(showCardHTML).join('');
+}
+function renderContinue() {
+  const sec = document.getElementById('continueSection');
+  const grid = document.getElementById('continueGrid');
+  if (!sec || !grid) return;
+  const hist = (currentUser.history || []).slice(0, 6);
+  if (hist.length === 0) { sec.style.display = 'none'; return; }
+  sec.style.display = 'block';
+  grid.innerHTML = hist.map(h => {
+    const s = SHOWS.find(x => x.id === h.id);
+    return s ? showCardHTML(s) : '';
+  }).join('');
+}
+function renderWatchlist() {
+  const sec = document.getElementById('watchlistSection');
+  const grid = document.getElementById('watchlistGrid');
+  if (!sec || !grid) return;
+  const list = (currentUser.watchlist || []).map(id => SHOWS.find(s => s.id === id)).filter(Boolean);
+  if (list.length === 0) { sec.style.display = 'none'; return; }
+  sec.style.display = 'block';
+  grid.innerHTML = list.map(showCardHTML).join('');
+}
+function toggleFav(id) {
+  if (!currentUser.watchlist) currentUser.watchlist = [];
+  const i = currentUser.watchlist.indexOf(id);
+  if (i >= 0) { currentUser.watchlist.splice(i,1); toast('Removed from watchlist'); }
+  else { currentUser.watchlist.push(id); toast('⭐ Added to watchlist'); if (currentUser.watchlist.length >= 10) unlockAch('collector'); }
+  saveUsers();
+  renderShows(currentCategory); renderFeatured(); renderWatchlist();
+}
+function toggleQueue(id) {
+  const i = queue.indexOf(id);
+  if (i >= 0) { queue.splice(i,1); toast('Removed from queue'); }
+  else { queue.push(id); toast('📋 Added to queue'); }
+  renderQueue();
+}
+function renderQueue() {
+  const sec = document.getElementById('queueSection');
+  const list = document.getElementById('queueList');
+  if (!sec || !list) return;
+  if (queue.length === 0) { sec.style.display = 'none'; return; }
+  sec.style.display = 'block';
+  list.innerHTML = queue.map((id, i) => {
+    const s = SHOWS.find(x => x.id === id);
+    return s ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:rgba(255,255,255,.03);border-radius:12px;margin-bottom:6px;font-size:.85rem">
+      <span>${i+1}. ${s.icon} ${s.title}</span>
+      <button class="btn-secondary btn-sm" data-play-queue="${i}">▶</button>
+    </div>` : '';
+  }).join('');
+}
+function playShow(show) {
+  const stage = document.getElementById('videoStage');
+  if (!stage) return;
+  stage.innerHTML = `<iframe src="${show.embed}?autoplay=1&playsinline=1" style="width:100%;height:100%;border:none;position:absolute;top:0;left:0" allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>`;
+  document.getElementById('streamUrl').value = show.embed;
+  // Track history
+  if (!currentUser.history) currentUser.history = [];
+  currentUser.history = currentUser.history.filter(h => h.id !== show.id);
+  currentUser.history.unshift({ id: show.id, at: Date.now(), progress: 10 });
+  currentUser.history = currentUser.history.slice(0, 20);
+  saveUsers();
+  showMiniPlayer(show.title);
+  switchPanel('player');
+  unlockAch('first_watch');
+}
+function loadMedia(url) {
+  const stage = document.getElementById('videoStage');
+  if (!stage || !url) return;
+  stage.innerHTML = '';
+  const yt = url.match(/(?:v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/)?.[1];
+  if (yt) {
+    stage.innerHTML = `<iframe src="https://www.youtube.com/embed/${yt}?autoplay=1&playsinline=1" style="width:100%;height:100%;border:none;position:absolute;top:0;left:0" allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>`;
+  } else {
+    stage.innerHTML = `<video controls autoplay playsinline style="width:100%;height:100%;position:absolute;top:0;left:0" src="${url}"></video>`;
   }
-  function purchaseItem(id) {
-    const item = STORE.find(i=>i.id===id);
-    if(!item) return;
-    if(currentUser.tickets < item.price) return toast(`Need ${item.price} Tickets`, 'error');
-    if(currentUser.purchases?.includes(id)) return toast('Already owned', 'info');
-    currentUser.tickets -= item.price;
-    if(!currentUser.purchases) currentUser.purchases=[];
-    currentUser.purchases.push(id);
-    saveUsers(); renderStore(); toast(`✅ ${item.name}`, 'success');
-  }
+  showMiniPlayer('Custom Stream');
+}
+function showMiniPlayer(title) {
+  const mp = document.getElementById('miniPlayer');
+  const info = document.getElementById('miniPlayerInfo');
+  if (mp && info) { info.textContent = title; mp.classList.add('active'); }
+}
 
-  // ---- SHOWS ----
-  function renderShows(cat='all') {
-    const grid = document.getElementById('showsGrid');
-    if(!grid) return;
-    const filtered = cat==='all' ? SHOWS : SHOWS.filter(s=>s.category===cat);
-    grid.innerHTML = filtered.map(s => `
-      <div class="show-card" data-show="${s.id}">
-        <div class="thumb">${s.icon}</div>
-        <h4>${s.title}</h4>
-        <div class="category-tag">${s.category}</div>
-      </div>
-    `).join('');
-  }
-  function renderFeatured() {
-    const grid = document.getElementById('featuredShows');
-    if(!grid) return;
-    grid.innerHTML = SHOWS.slice(0,6).map(s => `
-      <div class="show-card" data-show="${s.id}">
-        <div class="thumb">${s.icon}</div>
-        <h4>${s.title}</h4>
-        <div class="category-tag">${s.category}</div>
-      </div>
-    `).join('');
-  }
-  function playShow(show) {
-    const stage = document.getElementById('videoStage');
-    if(!stage) return;
-    stage.innerHTML = `<iframe src="${show.embed}?autoplay=1&playsinline=1" style="width:100%;height:100%;border:none;position:absolute;top:0;left:0;" allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>`;
-    document.getElementById('streamUrl').value = show.embed;
-    switchPanel('player');
-  }
-  function loadMedia(url) {
-    const stage = document.getElementById('videoStage');
-    if(!stage||!url) return;
-    stage.innerHTML = '';
-    const yt = url.match(/(?:v=|\/)([a-zA-Z0-9_-]{11})/)?.[1];
-    if(yt) { stage.innerHTML = `<iframe src="https://www.youtube.com/embed/${yt}?autoplay=1&playsinline=1" style="width:100%;height:100%;border:none;position:absolute;top:0;left:0;" allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>`; return; }
-    stage.innerHTML = `<video controls autoplay playsinline style="width:100%;height:100%;position:absolute;top:0;left:0;" src="${url}"></video>`;
-  }
+// ---- NAVIGATION ----
+function switchPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active-panel', p.id === id));
+  document.querySelectorAll('.taskbar-item').forEach(b => b.classList.toggle('active', b.dataset.panel === id));
+  if (id === 'player') renderShows(currentCategory);
+  if (id === 'home') { renderFeatured(); renderContinue(); renderWatchlist(); }
+  visitedPanels.add(id);
+  if (visitedPanels.size >= 9) unlockAch('explorer');
+}
 
-  // ---- NAVIGATION ----
-  function switchPanel(id) {
-    document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active-panel', p.id===id));
-    document.querySelectorAll('.taskbar-item').forEach(b => b.classList.toggle('active', b.dataset.panel===id));
-    if(id==='player') renderShows(currentCategory);
-    if(id==='home') renderFeatured();
-  }
+// ---- UI UPDATE ----
+function updateUI() {
+  document.getElementById('currentAvatar').textContent = currentUser.avatar || '👤';
+  document.getElementById('currentUserName').textContent = currentUser.name;
+  document.getElementById('zpointsDisplay').textContent = currentUser.tickets || 0;
+  const zsd = document.getElementById('zpointsStoreDisplay');
+  if (zsd) zsd.textContent = currentUser.tickets || 0;
+  renderUserList(); renderStore(); renderAchievements();
+}
+function renderUserList() {
+  const c = document.getElementById('userList');
+  if (!c) return;
+  c.innerHTML = Object.values(users).map(u => `
+    <div class="user-item" data-user="${u.id}">
+      <div class="u-avatar" style="background:${u.bg||'rgba(0,242,96,.1)'}">${u.avatar||'👤'}</div>
+      <div class="u-info"><div class="u-name">${u.name} ${u.type==='kids'?'🧒':''}</div><div class="u-sub">${u.type||'standard'} • 🎫${u.tickets||0}</div></div>
+      <button data-switch="${u.id}" class="btn-secondary btn-sm">Switch</button>
+    </div>
+  `).join('');
+}
+function renderAchievements() {
+  const c = document.getElementById('achGrid');
+  if (!c) return;
+  c.innerHTML = ACHIEVEMENTS.map(a => {
+    const unlocked = (currentUser.achievements || []).includes(a.id);
+    return `<div class="ach-item ${unlocked?'unlocked':''}">
+      <div class="ach-icon">${a.icon}</div>
+      <div class="ach-name">${a.name}</div>
+      <div class="ach-desc">${a.desc}</div>
+    </div>`;
+  }).join('');
+}
 
-  // ---- UI UPDATE ----
-  function updateUI() {
-    document.getElementById('currentAvatar').textContent = currentUser.avatar || '👤';
-    document.getElementById('currentUserName').textContent = currentUser.name;
-    document.getElementById('zpointsDisplay').textContent = currentUser.tickets || 0;
-    document.getElementById('zpointsStoreDisplay').textContent = currentUser.tickets || 0;
-    renderUserList();
-    renderStore();
-  }
-  function renderUserList() {
-    const c = document.getElementById('userList');
-    if(!c) return;
-    c.innerHTML = Object.values(users).map(u => `
-      <div class="user-item" data-user="${u.id}">
-        <div class="u-avatar" style="background:${u.bg||'rgba(0,242,96,0.1)'}">${u.avatar||'👤'}</div>
-        <div class="u-info"><div class="u-name">${u.name} ${u.type==='kids'?'🧒':''}</div><div class="u-sub">${u.type||'standard'} • 🎫${u.tickets||0}</div></div>
-        <button data-switch="${u.id}" class="btn-secondary" style="padding:4px 14px;font-size:0.7rem;">Switch</button>
+// ---- BROADCAST ----
+function renderBroadcast() {
+  const c = document.getElementById('broadcastUrlsList');
+  if (!c) return;
+  c.innerHTML = broadcastUrls.map((item, i) => {
+    const url = typeof item === 'string' ? item : item.url;
+    const name = typeof item === 'object' && item.name ? item.name : `Source ${i+1}`;
+    return `<div style="background:var(--bg-deep);padding:12px 16px;border-radius:14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;border:1px solid rgba(255,255,255,.04)">
+      <div><div style="font-weight:600;font-size:.85rem">${name}</div><span style="font-family:monospace;font-size:.75rem;color:var(--text-muted);word-break:break-all">${url}</span></div>
+      <div style="display:flex;gap:6px">
+        <button data-play-url="${i}" class="btn-primary btn-sm">▶</button>
+        <button data-remove-url="${i}" class="btn-danger btn-sm">✕</button>
       </div>
-    `).join('');
-  }
-
-  // ---- BROADCAST ----
-  function renderBroadcast() {
-    const c = document.getElementById('broadcastUrlsList');
-    if(!c) return;
-    c.innerHTML = broadcastUrls.map((url,i) => `
-      <div style="background:var(--bg-deep);padding:12px 16px;border-radius:14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;border:1px solid rgba(255,255,255,0.04);">
-        <span style="font-family:monospace;font-size:0.85rem;word-break:break-all;">${url}</span>
-        <div style="display:flex;gap:6px;">
-          <button data-play-url="${i}" class="btn-primary" style="padding:4px 14px;font-size:0.75rem;">▶</button>
-          <button data-remove-url="${i}" class="btn-secondary" style="padding:4px 14px;font-size:0.75rem;border-color:rgba(255,68,68,0.2);color:#ff6b6b;">✕</button>
-        </div>
-      </div>
-    `).join('');
-  }
-  function getLocalIP() {
-    const el = document.getElementById('localIpDisplay');
-    if(!el) return;
-    try {
-      const pc = new RTCPeerConnection({ iceServers: [] });
-      pc.createDataChannel('');
-      pc.createOffer().then(o=>pc.setLocalDescription(o));
-      pc.onicecandidate = e => {
-        if(e.candidate) {
-          const ip = e.candidate.candidate.match(/([0-9]{1,3}\.){3}[0-9]{1,3}/)?.[0];
-          if(ip && !ip.startsWith('0.0') && !ip.startsWith('127.')) { el.textContent='🌐 '+ip; pc.close(); }
-        }
-      };
-      setTimeout(()=>pc.close(), 3000);
-    } catch(e) { el.textContent='IP detection available'; }
-  }
-
-  // ---- MEDIA ----
-  function renderChannelVideos() {
-    const c = document.getElementById('channelVideos');
-    if(!c) return;
-    const vids = channels.default?.videos || [];
-    c.innerHTML = vids.map(v => `
-      <div style="background:var(--bg-card);border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,0.04);">
-        <video src="${v.dataUrl}" controls style="width:100%;aspect-ratio:16/9;background:#000;display:block;"></video>
-        <div style="padding:10px 12px;font-size:0.8rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${v.name}</div>
-      </div>
-    `).join('');
-  }
-  function uploadVideo(file) {
-    if(!file) return toast('Select a video', 'error');
-    const reader = new FileReader();
-    reader.onload = e => {
-      channels.default.videos.push({ name: file.name, dataUrl: e.target.result });
-      store('channels', channels);
-      renderChannelVideos();
-      toast('✅ Uploaded', 'success');
+    </div>`;
+  }).join('');
+}
+function getLocalIP() {
+  const el = document.getElementById('localIpDisplay');
+  if (!el) return;
+  try {
+    const pc = new RTCPeerConnection({ iceServers: [] });
+    pc.createDataChannel('');
+    pc.createOffer().then(o => pc.setLocalDescription(o));
+    pc.onicecandidate = e => {
+      if (e.candidate) {
+        const ip = e.candidate.candidate.match(/([0-9]{1,3}\.){3}[0-9]{1,3}/)?.[0];
+        if (ip && !ip.startsWith('0.0') && !ip.startsWith('127.')) { el.textContent = '🌐 ' + ip; pc.close(); }
+      }
     };
-    reader.readAsDataURL(file);
+    setTimeout(() => pc.close(), 3000);
+  } catch(e) { el.textContent = 'IP detection available'; }
+}
+function showQR() {
+  const container = document.getElementById('qrContainer');
+  const ip = document.getElementById('localIpDisplay').textContent.match(/([0-9]{1,3}\.){3}[0-9]{1,3}/)?.[0];
+  if (!ip) return toast('IP not detected yet', 'error');
+  container.style.display = 'block';
+  const text = `http://${ip}:8080/stream`;
+  const size = 160;
+  const canvas = document.createElement('canvas');
+  canvas.width = size; canvas.height = size;
+  const ctx = canvas.getContext('2d');
+  // Simple visual placeholder QR (not scannable — for scannable use a QR library)
+  ctx.fillStyle = '#fff'; ctx.fillRect(0,0,size,size);
+  ctx.fillStyle = '#000';
+  const cell = size / 21;
+  for (let y = 0; y < 21; y++) for (let x = 0; x < 21; x++) {
+    if ((x*y + x + y) % 3 === 0 || (x<7&&y<7) || (x>13&&y<7) || (x<7&&y>13)) ctx.fillRect(x*cell, y*cell, cell, cell);
   }
+  container.innerHTML = `<div class="qr-box"></div><div style="font-size:.75rem;color:var(--text-muted);margin-top:6px">${text}</div>`;
+  container.querySelector('.qr-box').appendChild(canvas);
+}
 
-  // ---- DEV ----
-  function runCode(code) {
-    const out = document.getElementById('devOutput');
-    try { const result = eval(code); out.innerHTML = `✅ ${result!==undefined?JSON.stringify(result,null,2):'executed'}`; } 
-    catch(e) { out.innerHTML = `❌ ${e.message}`; }
-  }
-
-  // ---- EVENT BINDING ----
-  document.addEventListener('click', e => {
-    // taskbar
-    const tb = e.target.closest('.taskbar-item');
-    if(tb) switchPanel(tb.dataset.panel);
-
-    // show cards
-    const sc = e.target.closest('.show-card');
-    if(sc && sc.dataset.show) {
-      const show = SHOWS.find(s=>s.id===sc.dataset.show);
-      if(show) playShow(show);
-    }
-
-    // navigation tiles
-    const tile = e.target.closest('.show-card[data-panel]');
-    if(tile && tile.dataset.panel) switchPanel(tile.dataset.panel);
-
-    // games
-    const gameTile = e.target.closest('.show-card[data-game]');
-    if(gameTile) {
-      const container = document.getElementById('gameEmbedContainer');
-      const iframe = document.getElementById('gameIframe');
-      if(container && iframe) {
-        container.style.display = 'block';
-        iframe.src = GAME_URLS[gameTile.dataset.game] || '';
-      }
-    }
-
-    // apps
-    const appTile = e.target.closest('.show-card[data-app]');
-    if(appTile) {
-      const container = document.getElementById('miniAppContainer');
-      const content = document.getElementById('appContent');
-      if(container && content) {
-        container.style.display = 'block';
-        content.innerHTML = APP_TEMPLATES[appTile.dataset.app] || '<p>Not found</p>';
-        content.querySelectorAll('script').forEach(s => eval(s.textContent));
-      }
-    }
-
-    // account
-    if(e.target.closest('#accountTile') || e.target.closest('#accountBar')) {
-      document.getElementById('accountModal').classList.add('active');
-      updateUI();
-    }
-
-    // modal close
-    if(e.target.closest('#closeModalBtn') || e.target.closest('.modal-overlay') && !e.target.closest('.modal-box')) {
-      document.getElementById('accountModal').classList.remove('active');
-    }
-
-    // store buy
-    const buy = e.target.closest('[data-store]');
-    if(buy) purchaseItem(buy.dataset.store);
-
-    // switch user
-    const sw = e.target.closest('[data-switch]');
-    if(sw) switchUser(sw.dataset.switch);
-
-    // broadcast play/remove
-    const playUrl = e.target.closest('[data-play-url]');
-    if(playUrl) { const idx=parseInt(playUrl.dataset.playUrl); if(broadcastUrls[idx]) loadMedia(broadcastUrls[idx]); }
-    const remUrl = e.target.closest('[data-remove-url]');
-    if(remUrl) { broadcastUrls.splice(parseInt(remUrl.dataset.removeUrl),1); store('broadcastUrls', broadcastUrls); renderBroadcast(); }
-
-    // category filter
-    const catBtn = e.target.closest('.category-pills button');
-    if(catBtn) {
-      document.querySelectorAll('.category-pills button').forEach(b=>b.classList.remove('active'));
-      catBtn.classList.add('active');
-      currentCategory = catBtn.dataset.category;
-      renderShows(currentCategory);
-    }
-  });
-
-  // ---- DOM READY ----
-  document.addEventListener('DOMContentLoaded', () => {
-    initUsers(); initCodes();
-    broadcastUrls = retrieve('broadcastUrls', []);
-    channels = retrieve('channels', { default: { videos: [] } });
-
-    // play media
-    document.getElementById('playMediaBtn').addEventListener('click', () => loadMedia(document.getElementById('streamUrl').value));
-
-    // airplay
-    document.getElementById('testAirPlayBtn').addEventListener('click', () => {
-      const stage = document.getElementById('videoStage');
-      stage.innerHTML = `<video controls autoplay playsinline style="width:100%;height:100%;position:absolute;top:0;left:0;" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"></video>`;
-      setTimeout(() => {
-        const v = stage.querySelector('video');
-        if(v?.webkitShowPlaybackTargetPicker) v.webkitShowPlaybackTargetPicker();
-        else toast('Tap AirPlay icon in player', 'info');
-      }, 500);
-    });
-    document.getElementById('mirrorScreenAirPlayBtn').addEventListener('click', () => toast('📱 Swipe down → Screen Mirroring', 'info', 4000));
-
-    // close game
-    document.getElementById('closeGameBtn').addEventListener('click', () => {
-      document.getElementById('gameEmbedContainer').style.display='none';
-      document.getElementById('gameIframe').src='';
-    });
-
-    // close app
-    document.getElementById('closeAppBtn').addEventListener('click', () => {
-      document.getElementById('miniAppContainer').style.display='none';
-    });
-
-    // calculator
-    document.addEventListener('click', e => {
-      const cb = e.target.closest('[data-calc]');
-      if(cb) { const d=document.getElementById('calcDisplay'); if(d) d.value += cb.dataset.calc; }
-      if(e.target.closest('#calcClear')) { const d=document.getElementById('calcDisplay'); if(d) d.value=''; }
-    });
-
-    // broadcast
-    document.getElementById('addBroadcastUrlBtn').addEventListener('click', () => {
-      const url = document.getElementById('ipStreamUrl').value.trim();
-      if(url) { broadcastUrls.push(url); store('broadcastUrls', broadcastUrls); renderBroadcast(); document.getElementById('ipStreamUrl').value=''; toast('✅ Source added', 'success'); }
-      else toast('Enter a URL', 'error');
-    });
-    document.getElementById('copyIpBtn').addEventListener('click', () => {
-      const ip = document.getElementById('localIpDisplay').textContent.match(/([0-9]{1,3}\.){3}[0-9]{1,3}/)?.[0];
-      if(ip) { navigator.clipboard?.writeText(ip)?.then(()=>toast('IP copied','success')).catch(()=>{ const ta=document.createElement('textarea'); ta.value=ip; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); toast('IP copied','success'); }); }
-    });
-
-    // users
-    document.getElementById('createUserBtn').addEventListener('click', () => {
-      const n=document.getElementById('newUserName').value.trim(), e=document.getElementById('newUserEmail').value.trim(), p=document.getElementById('newUserPassword').value.trim();
-      createUser(n,e,p);
-    });
-    document.getElementById('createKidsBtn').addEventListener('click', () => {
-      const n=document.getElementById('newUserName').value.trim(), p=document.getElementById('newUserPassword').value.trim();
-      if(n&&p) createUser('🧒 '+n, n+'@kids.tv', p, 'kids');
-      else toast('Name and password required', 'error');
-    });
-    document.getElementById('updateProfileBtn').addEventListener('click', () => {
-      const em=document.getElementById('profileEmoji').value.trim(), bg=document.getElementById('profileBg').value.trim();
-      updateProfile(em,bg);
-    });
-    document.getElementById('redeemZpointsBtn').addEventListener('click', () => {
-      const code=document.getElementById('zpointsCode').value.trim();
-      redeemCode(code);
-      document.getElementById('zpointsCode').value='';
-    });
-
-    // media upload
-    document.getElementById('uploadToChannelBtn').addEventListener('click', () => {
-      const file = document.getElementById('uploadFile').files[0];
-      uploadVideo(file);
-    });
-
-    // dev
-    document.getElementById('runCodeBtn').addEventListener('click', () => {
-      runCode(document.getElementById('codeArea').value);
-    });
-
-    // render all
-    renderShows('all');
-    renderFeatured();
-    renderBroadcast();
+// ---- MEDIA ----
+function renderChannelVideos() {
+  const c = document.getElementById('channelVideos');
+  if (!c) return;
+  const vids = channels.default?.videos || [];
+  c.innerHTML = vids.map((v, i) => `
+    <div style="background:var(--bg-card);border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.04);position:relative">
+      <video src="${v.dataUrl}" style="width:100%;aspect-ratio:16/9;background:#000;display:block" preload="metadata"></video>
+      <div style="padding:10px 12px;font-size:.8rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${v.name}</div>
+      <div style="display:flex;gap:6px;padding:0 12px 12px">
+        <button class="btn-primary btn-sm" data-play-vid="${i}">▶ Play</button>
+        <button class="btn-danger btn-sm" data-del-vid="${i}">🗑</button>
+      </div>
+    </div>
+  `).join('');
+}
+function uploadVideo(file) {
+  if (!file) return toast('Select a video', 'error');
+  const reader = new FileReader();
+  reader.onload = e => {
+    if (!channels.default) channels.default = { videos: [] };
+    if (!channels.default.videos) channels.default.videos = [];
+    channels.default.videos.push({ name: file.name, dataUrl: e.target.result, at: Date.now() });
+    store('channels', channels);
     renderChannelVideos();
-    getLocalIP();
+    toast('✅ Uploaded', 'success');
+  };
+  reader.readAsDataURL(file);
+}
+
+// ---- DEV ----
+function runCode(code) {
+  const out = document.getElementById('devOutput');
+  const logs = [];
+  const origLog = console.log;
+  console.log = (...a) => { logs.push(a.map(x => typeof x === 'object' ? JSON.stringify(x) : String(x)).join(' ')); };
+  try {
+    const result = eval(code);
+    out.textContent = `✅ Result: ${result !== undefined ? JSON.stringify(result, null, 2) : 'executed'}\n${logs.length ? '📋 Console:\n' + logs.join('\n') : ''}`;
+  } catch(e) {
+    out.textContent = `❌ ${e.message}\n${logs.length ? '📋 Console:\n' + logs.join('\n') : ''}`;
+  } finally { console.log = origLog; }
+  unlockAch('coder');
+}
+function exportData() {
+  const data = { users, currentUser: currentUser.id, channels, broadcastUrls, notifications, codes };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type:'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'zos-backup-' + Date.now() + '.json';
+  a.click();
+  toast('💾 Exported', 'success');
+}
+function importData(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (data.users) users = data.users;
+      if (data.channels) channels = data.channels;
+      if (data.broadcastUrls) broadcastUrls = data.broadcastUrls;
+      if (data.notifications) notifications = data.notifications;
+      if (data.codes) codes = data.codes;
+      if (data.currentUser && users[data.currentUser]) currentUser = users[data.currentUser];
+      store('users', users); store('channels', channels); store('broadcastUrls', broadcastUrls);
+      store('notifications', notifications); store('codes', codes); store('currentUser', currentUser.id);
+      updateUI(); renderBroadcast(); renderChannelVideos(); renderNotifs();
+      toast('✅ Imported', 'success');
+    } catch(e) { toast('❌ Invalid file', 'error'); }
+  };
+  reader.readAsText(file);
+}
+function resetAll() {
+  if (!confirm('Reset all data? This cannot be undone.')) return;
+  localStorage.clear();
+  location.reload();
+}
+
+// ---- MINI APPS ----
+const APP_TEMPLATES = {
+  calculator: `<div><input type="text" id="calcDisplay" readonly style="width:100%;text-align:right;font-size:1.8rem;background:var(--bg-deep);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:14px;color:var(--text-primary)"><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px">${[7,8,9,'/',4,5,6,'*',1,2,3,'-',0,'.','=','+'].map(b => `<button data-calc="${b}" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.04);border-radius:12px;padding:14px;color:var(--text-primary);font-size:1.2rem;cursor:pointer">${b}</button>`).join('')}<button id="calcClear" style="grid-column:span 4;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.04);border-radius:12px;padding:14px;color:var(--text-primary);cursor:pointer">Clear</button></div></div>`,
+  whiteboard: `<canvas id="miniCanvas" width="500" height="300" style="width:100%;background:#fff;border-radius:14px;cursor:crosshair;touch-action:none"></canvas><button id="clearCanvasBtn" class="btn-secondary" style="margin-top:10px">Clear</button>`,
+  timer: `<div><h4 style="margin-bottom:8px">⏱️ Timer</h4><div style="display:flex;gap:10px;flex-wrap:wrap"><input type="number" id="timerSeconds" value="60" style="flex:1;min-width:100px;background:var(--bg-deep);border:1px solid rgba(255,255,255,.06);border-radius:30px;padding:10px 16px;color:var(--text-primary)"><button class="btn-primary" id="startTimerBtn">Start</button></div><div id="timerDisplay" style="font-size:3.2rem;font-weight:700;font-family:monospace;color:var(--primary);margin-top:12px">0:00</div></div>`,
+  notes: `<div><h4 style="margin-bottom:8px">📝 Notes</h4><textarea id="sharedNotes" rows="6" style="width:100%;background:var(--bg-deep);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:14px;color:var(--text-primary);resize:vertical;font-family:inherit"></textarea><button class="btn-primary" id="saveNotesBtn" style="margin-top:10px">💾 Save</button></div>`,
+  stopwatch: `<div style="text-align:center"><h4>⏲️ Stopwatch</h4><div id="swDisplay" style="font-size:3rem;font-weight:700;font-family:monospace;color:var(--primary);margin:16px 0">0.00</div><button class="btn-primary" id="swStart">Start</button> <button class="btn-secondary" id="swReset">Reset</button></div>`,
+  dice: `<div style="text-align:center"><h4>🎲 Dice</h4><div id="diceDisplay" style="font-size:5rem;margin:16px 0">🎲</div><button class="btn-primary" id="rollDice">Roll</button></div>`,
+  coin: `<div style="text-align:center"><h4>🪙 Coin Flip</h4><div id="coinDisplay" style="font-size:5rem;margin:16px 0">🪙</div><button class="btn-primary" id="flipCoin">Flip</button></div>`,
+  password: `<div><h4 style="margin-bottom:8px">🔐 Password Generator</h4><div style="display:flex;gap:8px;margin-bottom:10px"><input type="number" id="pwLen" value="16" min="4" max="64" style="width:80px;background:var(--bg-deep);border:1px solid rgba(255,255,255,.06);border-radius:30px;padding:10px 16px;color:var(--text-primary)"><button class="btn-primary" id="genPw">Generate</button></div><input type="text" id="pwOut" readonly style="width:100%;background:var(--bg-deep);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:14px;color:var(--primary);font-family:monospace"></div>`
+};
+function runAppScripts(container) {
+  container.querySelectorAll('script').forEach(s => { try { eval(s.textContent); } catch(e) { console.warn(e); } });
+}
+
+// ---- SEARCH ----
+function performSearch(q) {
+  q = q.trim().toLowerCase();
+  if (!q) return [];
+  return SHOWS.filter(s => s.title.toLowerCase().includes(q) || s.category.toLowerCase().includes(q)).slice(0, 20);
+}
+
+// ---- COMMAND PALETTE ----
+const COMMANDS = [
+  { id:'home', icon:'fa-house', label:'Go to Home', action:() => switchPanel('home') },
+  { id:'player', icon:'fa-play', label:'Go to Stream', action:() => switchPanel('player') },
+  { id:'games', icon:'fa-gamepad', label:'Go to Games', action:() => switchPanel('games') },
+  { id:'apps', icon:'fa-cube', label:'Go to Apps', action:() => switchPanel('apps') },
+  { id:'broadcast', icon:'fa-globe', label:'Go to Broadcast', action:() => switchPanel('broadcast') },
+  { id:'channels', icon:'fa-folder', label:'Go to Media', action:() => switchPanel('channels') },
+  { id:'dev', icon:'fa-terminal', label:'Go to Dev Console', action:() => switchPanel('developer') },
+  { id:'surprise', icon:'fa-shuffle', label:'Surprise Me (random show)', action:() => { playShow(SHOWS[Math.floor(Math.random()*SHOWS.length)]); } },
+  { id:'account', icon:'fa-user', label:'Open Account', action:() => { document.getElementById('accountModal').classList.add('active'); } },
+  { id:'theme', icon:'fa-palette', label:'Cycle Theme', action:() => cycleTheme() },
+  { id:'export', icon:'fa-download', label:'Export Data', action:() => exportData() }
+];
+function openCmdPalette() {
+  document.getElementById('cmdOverlay').classList.add('active');
+  document.getElementById('cmdInput').value = '';
+  document.getElementById('cmdInput').focus();
+  renderCmdResults('');
+}
+function closeCmdPalette() { document.getElementById('cmdOverlay').classList.remove('active'); }
+function renderCmdResults(q) {
+  const box = document.getElementById('cmdResults');
+  let items = COMMANDS;
+  if (q) {
+    const ql = q.toLowerCase();
+    items = COMMANDS.filter(c => c.label.toLowerCase().includes(ql));
+    const shows = performSearch(q);
+    shows.forEach(s => items.push({ id:'show-'+s.id, icon:'fa-film', label:s.icon + ' ' + s.title, action:() => playShow(s) }));
+  }
+  box.innerHTML = items.map((c, i) => `<div class="cmd-item ${i===0?'selected':''}" data-cmd="${c.id}"><i class="fa-solid ${c.icon}"></i>${c.label}</div>`).join('') || '<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:.85rem">No results</div>';
+}
+
+// ---- THEME ----
+const THEMES = ['', 'blue', 'purple', 'sunset', 'mono'];
+let themeIdx = 0;
+function cycleTheme() {
+  themeIdx = (themeIdx + 1) % THEMES.length;
+  const t = THEMES[themeIdx];
+  if (t) document.documentElement.setAttribute('data-theme', t);
+  else document.documentElement.removeAttribute('data-theme');
+  store('theme', t);
+  toast(`🎨 Theme: ${t || 'Default'}`);
+}
+
+// ================================================================
+// EVENT BINDING
+// ================================================================
+document.addEventListener('click', e => {
+  const tb = e.target.closest('.taskbar-item');
+  if (tb) switchPanel(tb.dataset.panel);
+
+  const sc = e.target.closest('.show-card');
+  if (sc && sc.dataset.show) {
+    const show = SHOWS.find(s => s.id === sc.dataset.show);
+    if (show) playShow(show);
+  }
+
+  const tile = e.target.closest('.show-card[data-panel]');
+  if (tile && tile.dataset.panel) switchPanel(tile.dataset.panel);
+
+  const fav = e.target.closest('[data-fav]');
+  if (fav) { e.stopPropagation(); toggleFav(fav.dataset.fav); }
+
+  const q = e.target.closest('[data-queue]');
+  if (q) { e.stopPropagation(); toggleQueue(q.dataset.queue); }
+
+  const gameTile = e.target.closest('.show-card[data-game]');
+  if (gameTile) {
+    const c = document.getElementById('gameEmbedContainer');
+    const f = document.getElementById('gameIframe');
+    if (c && f) { c.style.display = 'block'; f.src = GAME_URLS[gameTile.dataset.game] || ''; }
+  }
+
+  const appTile = e.target.closest('.show-card[data-app]');
+  if (appTile) {
+    const c = document.getElementById('miniAppContainer');
+    const content = document.getElementById('appContent');
+    if (c && content) {
+      c.style.display = 'block';
+      content.innerHTML = APP_TEMPLATES[appTile.dataset.app] || '<p>Not found</p>';
+      runAppScripts(content);
+    }
+  }
+
+  if (e.target.closest('#accountTile') || e.target.closest('#accountTile2') || e.target.closest('#accountBar')) {
+    document.getElementById('accountModal').classList.add('active');
     updateUI();
-    switchPanel('home');
-    setTimeout(() => toast('📺 ZOS StreamOS 4.3 · TV Edition', 'success', 2000), 400);
+  }
+
+  if (e.target.closest('#closeModalBtn') || (e.target.closest('.modal-overlay') && !e.target.closest('.modal-box'))) {
+    document.getElementById('accountModal').classList.remove('active');
+  }
+
+  const buy = e.target.closest('[data-store]');
+  if (buy) purchaseItem(buy.dataset.store);
+
+  const sw = e.target.closest('[data-switch]');
+  if (sw) switchUser(sw.dataset.switch);
+
+  const playUrl = e.target.closest('[data-play-url]');
+  if (playUrl) { const i = +playUrl.dataset.playUrl; const item = broadcastUrls[i]; if (item) loadMedia(typeof item === 'string' ? item : item.url); }
+
+  const remUrl = e.target.closest('[data-remove-url]');
+  if (remUrl) { broadcastUrls.splice(+remUrl.dataset.removeUrl, 1); store('broadcastUrls', broadcastUrls); renderBroadcast(); }
+
+  const playVid = e.target.closest('[data-play-vid]');
+  if (playVid) { const v = channels.default.videos[+playVid.dataset.playVid]; if (v) { switchPanel('player'); setTimeout(() => loadMedia(v.dataUrl), 100); } }
+
+  const delVid = e.target.closest('[data-del-vid]');
+  if (delVid) { channels.default.videos.splice(+delVid.dataset.delVid, 1); store('channels', channels); renderChannelVideos(); }
+
+  const catBtn = e.target.closest('.category-pills button');
+  if (catBtn) {
+    document.querySelectorAll('.category-pills button').forEach(b => b.classList.remove('active'));
+    catBtn.classList.add('active');
+    currentCategory = catBtn.dataset.category;
+    renderShows(currentCategory);
+  }
+
+  const playQ = e.target.closest('[data-play-queue]');
+  if (playQ) { const s = SHOWS.find(x => x.id === queue[+playQ.dataset.playQueue]); if (s) playShow(s); }
+
+  const cb = e.target.closest('[data-calc]');
+  if (cb) { const d = document.getElementById('calcDisplay'); if (d) d.value += cb.dataset.calc; }
+  if (e.target.closest('#calcClear')) { const d = document.getElementById('calcDisplay'); if (d) d.value = ''; }
+
+  const cmd = e.target.closest('[data-cmd]');
+  if (cmd) {
+    const all = [...COMMANDS];
+    const ql = document.getElementById('cmdInput').value.toLowerCase();
+    if (ql) {
+      const shows = performSearch(ql);
+      shows.forEach(s => all.push({ id:'show-'+s.id, action:() => playShow(s) }));
+    }
+    const found = all.find(c => c.id === cmd.dataset.cmd);
+    if (found) { closeCmdPalette(); found.action(); }
+  }
+});
+
+// ---- KEYBOARD ----
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeCmdPalette(); document.getElementById('accountModal').classList.remove('active'); }
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); openCmdPalette(); }
+  if (e.key === '/' && !['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) { e.preventDefault(); openCmdPalette(); }
+  if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+  if (e.key >= '1' && e.key <= '9') {
+    const items = document.querySelectorAll('.taskbar-item');
+    const item = items[+e.key - 1];
+    if (item) switchPanel(item.dataset.panel);
+  }
+  if (e.key === ' ') {
+    e.preventDefault();
+    const v = document.querySelector('#videoStage video');
+    if (v) v.paused ? v.play() : v.pause();
+  }
+});
+
+// ---- DOM READY ----
+document.addEventListener('DOMContentLoaded', () => {
+  initUsers(); initCodes();
+  broadcastUrls = retrieve('broadcastUrls', []);
+  channels = retrieve('channels', { default: { videos: [] } });
+  notifications = retrieve('notifications', []);
+
+  const savedTheme = retrieve('theme', '');
+  if (savedTheme) { document.documentElement.setAttribute('data-theme', savedTheme); themeIdx = THEMES.indexOf(savedTheme); }
+
+  document.getElementById('playMediaBtn').addEventListener('click', () => loadMedia(document.getElementById('streamUrl').value));
+  document.getElementById('addToQueueBtn').addEventListener('click', () => {
+    const url = document.getElementById('streamUrl').value;
+    if (url) { queue.push(url); toast('📋 Added custom URL to queue'); renderQueue(); }
   });
 
-  // ---- GLOBAL ----
-  window.ZOS = { users, currentUser:()=>currentUser, shows:SHOWS, switchPanel, loadMedia, toast };
+  document.getElementById('surpriseBtn').addEventListener('click', () => {
+    playShow(SHOWS[Math.floor(Math.random() * SHOWS.length)]);
+  });
+
+  document.getElementById('testAirPlayBtn').addEventListener('click', () => {
+    const stage = document.getElementById('videoStage');
+    stage.innerHTML = `<video controls autoplay playsinline style="width:100%;height:100%;position:absolute;top:0;left:0" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"></video>`;
+    showMiniPlayer('AirPlay Test');
+    setTimeout(() => {
+      const v = stage.querySelector('video');
+      if (v?.webkitShowPlaybackTargetPicker) v.webkitShowPlaybackTargetPicker();
+      else toast('Tap AirPlay icon in player', 'info');
+    }, 500);
+    switchPanel('player');
+  });
+  document.getElementById('mirrorScreenAirPlayBtn').addEventListener('click', () => toast('📱 Swipe down → Screen Mirroring', 'info', 4000));
+
+  document.getElementById('closeGameBtn').addEventListener('click', () => {
+    document.getElementById('gameEmbedContainer').style.display = 'none';
+    document.getElementById('gameIframe').src = '';
+  });
+  document.getElementById('closeAppBtn').addEventListener('click', () => {
+    document.getElementById('miniAppContainer').style.display = 'none';
+  });
+
+  document.getElementById('addBroadcastUrlBtn').addEventListener('click', () => {
+    const url = document.getElementById('ipStreamUrl').value.trim();
+    const name = document.getElementById('ipStreamName').value.trim();
+    if (url) {
+      broadcastUrls.push({ url, name: name || '' });
+      store('broadcastUrls', broadcastUrls);
+      renderBroadcast();
+      document.getElementById('ipStreamUrl').value = '';
+      document.getElementById('ipStreamName').value = '';
+      toast('✅ Source added', 'success');
+    } else toast('Enter a URL', 'error');
+  });
+  document.getElementById('copyIpBtn').addEventListener('click', () => {
+    const ip = document.getElementById('localIpDisplay').textContent.match(/([0-9]{1,3}\.){3}[0-9]{1,3}/)?.[0];
+    if (ip) navigator.clipboard?.writeText(ip).then(() => toast('IP copied', 'success')).catch(() => toast('Copy failed', 'error'));
+  });
+  document.getElementById('qrIpBtn').addEventListener('click', showQR);
+
+  document.getElementById('createUserBtn').addEventListener('click', () => {
+    const n = document.getElementById('newUserName').value.trim(),
+          e = document.getElementById('newUserEmail').value.trim(),
+          p = document.getElementById('newUserPassword').value.trim();
+    createUser(n, e, p);
+  });
+  document.getElementById('createKidsBtn').addEventListener('click', () => {
+    const n = document.getElementById('newUserName').value.trim(),
+          p = document.getElementById('newUserPassword').value.trim();
+    if (n && p) createUser('🧒 ' + n, n + '@kids.tv', p, 'kids');
+    else toast('Name and password required', 'error');
+  });
+  document.getElementById('updateProfileBtn').addEventListener('click', () => {
+    const em = document.getElementById('profileEmoji').value.trim();
+    const color = document.getElementById('profileColor').value;
+    updateProfile(em, color);
+  });
+  document.getElementById('redeemZpointsBtn').addEventListener('click', () => {
+    const code = document.getElementById('zpointsCode').value.trim();
+    redeemCode(code);
+    document.getElementById('zpointsCode').value = '';
+  });
+
+  document.getElementById('uploadToChannelBtn').addEventListener('click', () => {
+    uploadVideo(document.getElementById('uploadFile').files[0]);
+  });
+
+  const dz = document.getElementById('dropZone');
+  ['dragover','dragenter'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.style.borderColor = 'var(--primary)'; }));
+  ['dragleave','drop'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.style.borderColor = 'rgba(255,255,255,.08)'; }));
+  dz.addEventListener('drop', e => { const f = e.dataTransfer.files[0]; if (f && f.type.startsWith('video/')) uploadVideo(f); });
+
+  document.getElementById('runCodeBtn').addEventListener('click', () => runCode(document.getElementById('codeArea').value));
+  document.getElementById('exportDataBtn').addEventListener('click', exportData);
+  document.getElementById('importDataBtn').addEventListener('click', () => document.getElementById('importFile').click());
+  document.getElementById('importFile').addEventListener('change', e => { if (e.target.files[0]) importData(e.target.files[0]); });
+  document.getElementById('resetDataBtn').addEventListener('click', resetAll);
+
+  document.getElementById('themeBtn').addEventListener('click', cycleTheme);
+  document.getElementById('searchBtn').addEventListener('click', openCmdPalette);
+  document.getElementById('notifBtn').addEventListener('click', () => document.getElementById('notifPanel').classList.toggle('active'));
+  document.getElementById('clearNotifs').addEventListener('click', () => { notifications = []; store('notifications', notifications); renderNotifs(); });
+
+  document.getElementById('cmdInput').addEventListener('input', e => renderCmdResults(e.target.value));
+  document.getElementById('cmdInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { const first = document.querySelector('.cmd-item.selected'); if (first) first.click(); }
+  });
+  document.getElementById('cmdOverlay').addEventListener('click', e => { if (e.target.id === 'cmdOverlay') closeCmdPalette(); });
+
+  document.getElementById('miniClose').addEventListener('click', () => document.getElementById('miniPlayer').classList.remove('active'));
+  document.getElementById('miniPlayPause').addEventListener('click', () => {
+    const v = document.querySelector('#videoStage video');
+    if (v) v.paused ? v.play() : v.pause();
+  });
+
+  // render all
+  renderShows('all');
+  renderFeatured();
+  renderContinue();
+  renderWatchlist();
+  renderBroadcast();
+  renderChannelVideos();
+  renderNotifs();
+  getLocalIP();
+  updateUI();
+  renderQueue();
+  switchPanel('home');
+
+  setTimeout(() => toast('📺 ZOS StreamOS 4.0 · TV Edition', 'success', 2200), 400);
+  setTimeout(() => notify('👋 Welcome to ZOS StreamOS 4.0'), 800);
+});
+
+// ---- GLOBAL ----
+window.ZOS = {
+  get users() { return users; },
+  get currentUser() { return currentUser; },
+  shows: SHOWS,
+  switchPanel, loadMedia, toast, notify,
+  unlockAch, playShow
+};
 </script>
 </body>
 </html>
